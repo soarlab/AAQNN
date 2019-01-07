@@ -1,0 +1,11 @@
+Prediction on input with index 0, whose class predicted is 'cat' (true value cat ) and the confidence is 2.1911535.
+the second player is cooperative.
+
+found an adversary image within pre-specified bounded computational resource. The following is its information: 
+difference between images: [(15, 7, 0), (15, 7, 2), (27, 18, 0), (27, 18, 1), (27, 18, 2)]
+number of adversarial examples found: 659
+L2 distance 0.830789658778
+L1 distance 1.6980392156862745
+L0 distance 5
+manipulated percentage distance 0.00162760416667
+class is changed into 'airplane' with confidence 1.6379141
