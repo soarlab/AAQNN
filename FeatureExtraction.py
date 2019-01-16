@@ -79,7 +79,7 @@ class FeatureExtraction:
         # Grey-box pattern: get partitions from saliency map.
         if self.PATTERN == 'grey-box':
             print("Extracting image features using '%s' pattern." % self.PATTERN)
-            print "ok"
+            print("ok")
             saliency_map = self.get_saliency_map(image, model)
 
             partitions = {}
@@ -154,7 +154,7 @@ class FeatureExtraction:
         
         manipulated_images = []
         (row, col, chl) = image.shape
-        print image.shape
+        print(image.shape)
         for i in range(0, row):
             for j in range(0, col):
                 # need to be very careful about image.copy()
@@ -168,7 +168,7 @@ class FeatureExtraction:
         
         # Use softmax logits instead of probabilities,
         # as probabilities may not reflect precise influence of one single pixel change.
-        print "len: "+str(len(manipulated_images))
+        print("len: "+str(len(manipulated_images)))
 
         features_list = model.softmax_logits(manipulated_images)
         
@@ -189,5 +189,5 @@ class FeatureExtraction:
                                          np.split(min_idx_values, len(min_idx_values))))
 
         saliency_map = target_feature_list[target_feature_list[:, 2].argsort()]
-        print "ok12"
+        print("ok12")
         return saliency_map

@@ -36,30 +36,30 @@ class NeuralNetwork:
 
     # Specify which dataset at initialisation.
     def __init__(self, data_set, abits, wbits, network_type,seed):
-			self.network_type=network_type
-			self.abits=abits
-			self.wbits=wbits
-			self.data_set = data_set
-			self.seed=seed
-			self.model = Sequential()
-			cfDeep=self.myCF(self)
-			if self.data_set == 'mnist':
-				cfg = 'config_MNIST'
-			if self.data_set == 'fashion':
-				cfg = 'config_FASHION'
-			if self.data_set=='cifar10':
-				cfg = 'config_CIFAR-10'
-			self.cf = Config(cfg, cmd_args = cfDeep.myDict)
-			print "Dataset: "+str("%s_pic/" % self.data_set)
-			assure_path_exists("%s_pic/" % self.data_set)
+      self.network_type=network_type
+      self.abits=abits
+      self.wbits=wbits
+      self.data_set = data_set
+      self.seed=seed
+      self.model = Sequential()
+      cfDeep=self.myCF(self)
+      if self.data_set == 'mnist':
+          cfg = 'config_MNIST'
+      if self.data_set == 'fashion':
+          cfg = 'config_FASHION'
+      if self.data_set=='cifar10':
+          cfg = 'config_CIFAR-10'
+      self.cf = Config(cfg, cmd_args = cfDeep.myDict)
+      print("Dataset: "+str("%s_pic/" % self.data_set))
+      assure_path_exists("%s_pic/" % self.data_set)
 
     def predict(self, image):
-        import numpy as np
-        image = np.expand_dims(image, axis=0)
-        predict_value = self.model.predict(image)
-        new_class = np.argmax(np.ravel(predict_value))
-        confident = np.amax(np.ravel(predict_value))
-        return new_class, confident
+      import numpy as np
+      image = np.expand_dims(image, axis=0)
+      predict_value = self.model.predict(image)
+      new_class = np.argmax(np.ravel(predict_value))
+      confident = np.amax(np.ravel(predict_value))
+      return new_class, confident
 
     # To train a neural network.
     def train_network_QNN(self):
@@ -371,7 +371,7 @@ class NeuralNetwork:
             strLabel=self.get_label(int(label))
             if str(targetLabel)==str(strLabel):
                 myList.append(i)
-        print myList
+        print(myList)
         raw_input()
         
     # Get softmax logits, i.e., the inputs to the softmax function of the classification layer,

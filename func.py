@@ -53,16 +53,16 @@ def getModelFromQNN(cf,train_x,train_y,test_x,test_y):
     #sgd = SGD(lr=cf.lr, decay=cf.decay, momentum=0.9, nesterov=True)
     adam= Adam(lr=cf.lr, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=cf.decay)
     try:
-			print ("Weights path: "+str(cf.out_wght_path))
-			model.load_weights(cf.out_wght_path)
-			print('Load previous weights\n')
-			model.compile(loss=squared_hinge, optimizer=adam, metrics=['accuracy'])
-			#CpuMemorySettings()
-			return False, model
-			#Trained? NO weights exist
-    except Exception, e:
-			#CudaMemorySettings()
-			print 'Failed:'+ str(e)
+      print("Weights path: "+str(cf.out_wght_path))
+      model.load_weights(cf.out_wght_path)
+      print('Load previous weights\n')
+      model.compile(loss=squared_hinge, optimizer=adam, metrics=['accuracy'])
+	#CpuMemorySettings()
+      return False, model
+	#Trained? NO weights exist
+    except  e:
+	#CudaMemorySettings()
+      print('Failed:'+ str(e))
     print('compiling the network\n')
     model.compile(loss=squared_hinge, optimizer=adam, metrics=['accuracy'])
     print('No weights preloaded, training from scratch\n')
