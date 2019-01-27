@@ -20,7 +20,7 @@ finetune=True
 def CudaMemorySettings():
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
-    config.gpu_options.per_process_gpu_memory_fraction = 0.2
+    config.gpu_options.per_process_gpu_memory_fraction = 0.1
     config.gpu_options.visible_device_list = "0"
     set_session(tf.Session(config=config))
 
