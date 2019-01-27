@@ -1,3 +1,37 @@
+# How to run the prototype
+After you did both the setup of the QNN and for the attacker 'DeepGame' run the following:
+
+python launcher.py 'seed_number' 'first_image' 'last_image' 'dataset'
+
+Where:
+
+'seed_number': set the seed for the execution. Note: if the seed does not match any of
+the stored weights (previous training) the net is going to be trained from scratch.
+
+'First Image': index of the first image. On Cifar10, mnist max value is 9999.
+
+'Last Image': index of the last image. On Cifar10, mnist max value is 10000.
+
+'dataset': we support mnist, cifar10, fashion.
+
+# How I want to run the analysis
+
+I want to use 'screen' to open 4 terminal windows on the server.
+
+On each of them I want to run one of the following:
+
+python launcher.py 10 0 2500 mnist
+python launcher.py 10 2500 5000 mnist
+python launcher.py 10 5000 7500 mnist
+python launcher.py 10 7500 10000 mnist
+
+Each of this command run the attacker on one image for all 
+the quantization levels (2,4,8,16,32,64) in parallel. 
+If we figure out there is space for more parallelization (ex. CPU's usage is 60%) 
+we can easily modify in 'executor.py' the variable 'concurrentProcesses'
+and make it double (now is 6 we can make it 12, 24 or whatever. 
+6 means 1 image for 2,4,8,16,32,64. 12= 2*6 means 2 images for 2,4,8,16,32,64).
+
 # DeepGame (A Game-Based Approximate Verification of Deep Neural Networks with Provable Guarantees)
 
 Min Wu, Matthew Wicker, Wenjie Ruan, Xiaowei Huang, Marta Kwiatkowska.
