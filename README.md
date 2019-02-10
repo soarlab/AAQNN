@@ -66,11 +66,22 @@ Despite the improved accuracy of deep neural networks, the discovery of adversar
 ![alt text](figures/Adv_GTSRB.png)
 
 
+# Prerequisite
+Installed pylearn2
+
 # Install
 ```
 python 3.6
 pip3 install -r requirements.txt
 ```
+
+# Test installation
+
+```bash
+python test_installation.py
+```
+
+If nothing crashes for a minute, it's all right, the installation is successful.
 
 # Run
 ```
