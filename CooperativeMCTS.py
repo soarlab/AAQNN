@@ -297,7 +297,7 @@ class MCTSCooperative:
             nprint("current best %s, considered to be replaced by %s" % (self.bestCase[0], dist))
             if self.bestCase[0] > dist:
                 print("update best case from %s to %s" % (self.bestCase[0], dist))
-                print "New class: "+str(self.model.get_label(int(newClass)))#+" is like target: "+str(self.target_class)
+                print("New class: "+str(self.model.get_label(int(newClass))))#+" is like target: "+str(self.target_class)
                 
                 self.numConverge += 1
                 self.bestCase = (dist, self.atomicManipulationPath)

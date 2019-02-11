@@ -1,0 +1,3 @@
+Prediction on input with index 0, whose class predicted is 'truck' (true value cat ) and the confidence is -0.26001835.
+the second player is cooperative.
+NN misclassification without attack

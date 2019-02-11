@@ -1,0 +1,5 @@
+venv/
+weightsQNN/
+.idea/
+__pycache__/
+*.pyc

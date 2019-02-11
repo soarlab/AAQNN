@@ -65,46 +65,25 @@ Despite the improved accuracy of deep neural networks, the discovery of adversar
 ![alt text](figures/Adv_CIFAR10.png)
 ![alt text](figures/Adv_GTSRB.png)
 
-# Developer's Platform
+
+# Prerequisite
+Installed pylearn2
+
+# Install
 ```
-python 3.5.5
-keras 2.1.3
-tensorflow-gpu 1.4.0
-numpy 1.14.3
-matplotlib 2.2.2
-scipy 1.1.0
+python 3.6
+pip3 install -r requirements.txt
 ```
+
+# Test installation
+
+```bash
+python test_installation.py
+```
+
+If nothing crashes for a minute, it's all right, the installation is successful.
 
 # Run
 ```
-python main.py mnist ub cooperative 67 L2 10 1
+python3 launcher.py
 ```
-or
-```
-./commands.sh
-```
-
-# Citation
-```
-@ARTICLE{2018arXiv180703571W,
-   author = {{Wu}, Min and {Wicker}, Matthew and {Ruan}, Wenjie and {Huang}, Xiaowei and 
-	{Kwiatkowska}, Marta},
-    title = "{A Game-Based Approximate Verification of Deep Neural Networks with Provable Guarantees}",
-  journal = {ArXiv e-prints},
-archivePrefix = "arXiv",
-   eprint = {1807.03571},
-     year = 2018,
-    month = jul,
-      url = {https://arxiv.org/abs/1807.03571}
-}
-
-```
-
-# Remark
-This tool is under active development and maintenance, please feel free to contact us about any problem encountered.
-
-Best wishes,
-
-xiaowei.huang@cs.ox.ac.uk
-
-min.wu@cs.ox.ac.uk

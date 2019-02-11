@@ -1,6 +1,5 @@
 import shlex
 import subprocess
-import os
 import sys
 from random import seed as seedR
 from numpy.random import seed
@@ -22,9 +21,9 @@ dataset=str(sys.argv[4])
 
 processes=[]
 exe="python executor.py "+str(seedNumber)+" "+str(init)+" "+str(end)+ " "+ dataset
-print exe
+print(exe)
 exe=shlex.split(exe)
 p=subprocess.Popen(exe,shell=False)
 processes.append(p)
 p.wait()
-print "Done with images from "+str(init)+" to "+str(end)
+print("Done with images from "+str(init)+" to "+str(end))

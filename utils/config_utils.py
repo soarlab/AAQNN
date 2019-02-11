@@ -53,7 +53,7 @@ def parse_param(param, value):
 class Config:
     def __init__(self, cfg, cmd_args = {}):
         try:
-            print cfg
+            print(cfg)
             for k in parameter_specs:
                 self.proces_param(k, cfg, cmd_args)
 
@@ -66,7 +66,7 @@ class Config:
     
     def proces_param(self, param, cfg, cmd_args):
         if param in cmd_args :
-			setattr(self, param.lower(), parse_param(param, cmd_args[param]))
+            setattr(self, param.lower(), parse_param(param, cmd_args[param]))
         elif param.lower() in cmd_args:
             setattr(self, param.lower(), parse_param(param, cmd_args[param.lower()]))
         else:
