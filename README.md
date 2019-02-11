@@ -36,12 +36,12 @@ python launcher.py 10 0 10000 mnist
 
 This is how we should run the analysis. What we need to tune is only the variable
 'concurrentProcesses' described in the following.
-
-If we figure out there is space for more parallelization (ex. CPU's usage is 60%) 
-we can easily modify in 'executor.py' the variable 'concurrentProcesses'.
-
 'concurrentProcesses' describes how many pairs (ImageNumber, QuantizationLevel)
-are being attacked at the same time.
+are being attacked at the same time. 
+Ex. (img=10,Q=2) and (img=10,Q=4) are two different pairs!
+
+If we figure out there is space for more parallelization (ex. CPU's usage is 60%),
+we can easily modify in 'executor.py' the variable 'concurrentProcesses'.
 
 # DeepGame (A Game-Based Approximate Verification of Deep Neural Networks with Provable Guarantees)
 
