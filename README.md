@@ -16,22 +16,32 @@ the stored weights (previous training) the net is going to be trained from scrat
 
 # How I want to run the analysis
 
-I want to use *screen* to open 4 terminal windows on the server.
+~~I want to use *screen* to open 4 terminal windows on the server.~~
 
-On each of them I want to run one of the following:
+~~On each of them I want to run one of the following:~~
+
+~~python launcher.py 10 0 2500 mnist~~
+~~python launcher.py 10 2500 5000 mnist~~
+~~python launcher.py 10 5000 7500 mnist~~
+~~python launcher.py 10 7500 10000 mnist~~
+
+~~Each of this command run the attacker on one image for all~~ 
+~~the quantization levels (2,4,8,16,32,64) in parallel.~~
+
+What I just crossed out, it is the hard way to do something easy.
+
 ```python
-python launcher.py 10 0 2500 mnist
-python launcher.py 10 2500 5000 mnist
-python launcher.py 10 5000 7500 mnist
-python launcher.py 10 7500 10000 mnist
+python launcher.py 10 0 10000 mnist
 ```
 
-Each of this command run the attacker on one image for all 
-the quantization levels (2,4,8,16,32,64) in parallel. 
+This is how we should run the analysis. What we need to tune is only the variable
+'concurrentProcesses' described in the following.
+
 If we figure out there is space for more parallelization (ex. CPU's usage is 60%) 
-we can easily modify in 'executor.py' the variable 'concurrentProcesses'
-and make it double (now is 6 we can make it 12, 24 or whatever. 
-6 means 1 image for 2,4,8,16,32,64. 12= 2*6 means 2 images for 2,4,8,16,32,64).
+we can easily modify in 'executor.py' the variable 'concurrentProcesses'.
+
+'concurrentProcesses' describes how many pairs (ImageNumber, QuantizationLevel)
+are being attacked at the same time.
 
 # DeepGame (A Game-Based Approximate Verification of Deep Neural Networks with Provable Guarantees)
 
