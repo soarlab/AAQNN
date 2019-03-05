@@ -69,7 +69,7 @@ def process_image(dataset_name, bound, game_type, image_index, distance_measure,
 def main():
     pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
     print("pool size: ")
-    quantization = [2, 4]
+    quantization = [2, 4, 8, 16, 32, 64]
 
     print(sys.argv[1])
     seed = int(sys.argv[1])
@@ -81,13 +81,12 @@ def main():
         print(sourceImage)
         index0 = sourceImage
         for q in quantization:
-            pool.apply_async(process_image, [dataset_name, "ub", "cooperative", index0, "L2", "10", "1", q, q, seed])
-
-    # no more jobs can be added
-    pool.close()
+            pool.apply_async(process_image, [dataset_name, "ub", "cooperative", index0, "L2", 10, 1, q, q, seed])
 
     # wait for all jobs to finish
+    pool.close()
     pool.join()
+    print("all done")
 
 
 if __name__=="__main__":
