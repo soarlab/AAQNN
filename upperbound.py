@@ -17,7 +17,7 @@ def upperbound(dataSetName, bound, tau, gameType, image_index, eta, wbits, abits
 	NN.train_network_QNN()
 	print("Dataset is %s." % NN.data_set)
 	dataset = DataSet(dataSetName, 'testing')    
-    
+
 	realLabel=dataset.get_True_Label(image_index)
 	image = dataset.get_input(image_index)
 	(label, confident) = NN.predict(image)

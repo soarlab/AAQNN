@@ -1,7 +1,10 @@
-import shlex
-import subprocess
-import os
+from __future__ import print_function
 import sys
+import multiprocessing
+from DataCollection import *
+from main import process_image
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 '''
 For every image, an adversarial sample is crated for every quantization level (2, 4, .. 64).
@@ -11,28 +14,29 @@ But for creation of an adversarial sample for the next image, it is not necessar
 So the creation of adversarial samples for the next image starts in parallel with the creation of adv samples for the previous image and so on.
 '''
 
-quantization=[2,4,8,16,32,64]
 
-# controls total number of concurrent process that is run, if set too high, not-enough-memory exception could occur
-MAX_NUMBER_OF_CONCURRENT_PROCESSES = 60
+def main():
+    pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
+    print("pool size: ")
+    quantization = [2, 4, 8, 16, 32, 64]
 
-print(sys.argv[1])
-seed=int(sys.argv[1])
-startPoint=int(sys.argv[2])
-lenTest=int(sys.argv[3])
-dataset=str(sys.argv[4])
+    print(sys.argv[1])
+    seed = int(sys.argv[1])
+    start_point = int(sys.argv[2])
+    test_length = int(sys.argv[3])
+    dataset_name = str(sys.argv[4])
 
-processes={}
+    for sourceImage in range(start_point, test_length):
+        print(sourceImage)
+        index0 = sourceImage
+        for q in quantization:
+            pool.apply_async(process_image, [dataset_name, "ub", "cooperative", index0, "L2", 10, 1, q, q, seed])
 
-for sourceImage in range(startPoint,lenTest):
-	print(sourceImage)
-	index0=sourceImage
-	for q in quantization:
-		exe="python main.py "+dataset+" ub cooperative "+str(index0)+" L2 10 1 "+str(q)+" "+str(q)+" "+str(seed)
-		print(exe)
-		exe=shlex.split(exe)
-		p=subprocess.Popen(exe,shell=False)
-		processes[p.pid]=1	#.append(p)
-		if len(processes.keys())>=MAX_NUMBER_OF_CONCURRENT_PROCESSES:
-			(pid,exitstat) = os.wait()
-			del processes[pid]
+    # wait for all jobs to finish
+    pool.close()
+    pool.join()
+    print("all done")
+
+
+if __name__=="__main__":
+    main()
