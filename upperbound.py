@@ -46,6 +46,8 @@ def upperbound(dataSetName, bound, tau, gameType, image_index, eta, wbits, abits
 		start_time_level = time.time()
 		runningTime_level = 0 
 		currentBest = eta[1]
+		times = {}
+		number_of_current_bests = 0
 		while runningTime_all <= MCTS_all_maximal_time:
 			print ("Time: "+str(runningTime_all))
 			'''
@@ -65,6 +67,9 @@ def upperbound(dataSetName, bound, tau, gameType, image_index, eta, wbits, abits
 			if currentBest > mctsInstance.bestCase[0]:
 				print("best distance up to now is %s" % (str(mctsInstance.bestCase[0])))
 				currentBest = mctsInstance.bestCase[0]
+				times[number_of_current_bests] = time.time() - start_time_all
+				number_of_current_bests += 1
+
 			bestChild = mctsInstance.bestChild(mctsInstance.rootIndex)
 	
 			# store the current best
@@ -103,7 +108,15 @@ def upperbound(dataSetName, bound, tau, gameType, image_index, eta, wbits, abits
 			print("number of adversarial examples found: %s\n" % mctsInstance.numAdv)
 			
 			outF.write("number of adversarial examples found: %s\n" % mctsInstance.numAdv)
-	
+
+			print("time needed to obtain an adversarial sample: \n")
+			outF.write("time needed to obtain an adversarial sample: \n")
+
+			for sample_index in range(0, number_of_current_bests):
+				output_line = str(sample_index) + ": " + str(times[sample_index])
+				print(output_line)
+				outF.write(output_line)
+
 			l2dist = l2Distance(mctsInstance.image, image1)
 			l1dist = l1Distance(mctsInstance.image, image1)
 			l0dist = l0Distance(mctsInstance.image, image1)
