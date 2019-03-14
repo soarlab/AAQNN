@@ -113,7 +113,7 @@ def upperbound(dataSetName, bound, tau, gameType, image_index, eta, wbits, abits
 			outF.write("time needed to obtain an adversarial sample: \n")
 
 			for sample_index in range(0, number_of_current_bests):
-				output_line = str(sample_index) + ": " + str(times[sample_index])
+				output_line = str(sample_index) + ": " + str(times[sample_index]) + "\n"
 				print(output_line)
 				outF.write(output_line)
 
