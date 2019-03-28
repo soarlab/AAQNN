@@ -15,22 +15,13 @@ the stored weights (previous training) the net is going to be trained from scrat
 *dataset*: we support mnist, cifar10, fashion.
 
 # How to start the process on CloudLab
-
-mmatak@node-0:~$ sudo apt update
-mmatak@node-0:~$ sudo apt-get install python3-pip
-mmatak@node-0:~$ sudo apt-get install virtualenv
-
-mmatak@node-0:~$ virtualenv -p python3 venv
-mmatak@node-0:~$ git clone https://martinmatak@bitbucket.org/Rospoly/qnn-aas.git
-mmatak@node-0:~$ source venv/bin/activate
-(venv) mmatak@node-0:~$ pip install -r qnn-aas/requirements.txt
-
-(venv) mmatak@node-0:~$ git clone git://github.com/lisa-lab/pylearn2.git
-(venv) mmatak@node-0:~$ cd pylearn2/
-(venv) mmatak@node-0:~/pylearn2$ python setup.py develop
-
-(venv) mmatak@node-0:~/pylearn2$ cd ../qnn-aas/
-(venv) mmatak@node-0:~/qnn-aas$ python launcher.py 10 0 1 mnist
+```
+$ (screen -R)
+$ git clone https://bitbucket.org/Rospoly/qnn-aas.git && cd qnn-aas && ./repo-init.sh && source venv/bin/activate
+$ python launcher.py 10 0 1 mnist 
+$ (ctr+a d)
+$ (exit)
+```
 
 # How I want to run the analysis
 
