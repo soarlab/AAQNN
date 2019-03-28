@@ -1,2 +1,0 @@
-Prediction on input with index 0, whose class predicted is 'cat' (true value cat ) and the confidence is 2.1911535.
-the second player is cooperative.
