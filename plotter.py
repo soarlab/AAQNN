@@ -57,8 +57,11 @@ def print_graph(perturbations, x_axis_label, y_axis_label, plot_name):
     ax.plot([0, max_perturbation], [0, max_perturbation], color='b', marker='o', linestyle='dashed', linewidth=0.5,
             markersize=3, dashes=(2, 6))  # length of 2, space of 6
 
-    # values on axis, add 20% offset
+    # values on axis
     plt.axis([0, max_perturbation, 0, max_perturbation])
+
+    plt.xlabel(x_axis_label, fontsize=14)
+    plt.ylabel(y_axis_label, fontsize=14)
 
     plt.savefig(plot_name + ".png", bbox_inches='tight')
     plt.close()
@@ -145,10 +148,10 @@ print_graph(perturbations_2_16_bits_L0, "L0 for 2 bits", "L0 for 16 bits", "grap
 print_graph(perturbations_2_32_bits_L0, "L0 for 2 bits", "L0 for 32 bits", "graphs/L0_2_32_bits")
 print_graph(perturbations_2_64_bits_L0, "L0 for 2 bits", "L0 for 64 bits", "graphs/L0_2_64_bits")
 
-print_graph(perturbations_4_8_bits_L0, "L0 for 4 bits", "L0 for 8 bits", "graphs/L0_2_8_bits")
-print_graph(perturbations_4_16_bits_L0, "L0 for 4 bits", "L0 for 16 bits", "graphs/L0_2_16_bits")
-print_graph(perturbations_4_32_bits_L0, "L0 for 4 bits", "L0 for 32 bits", "graphs/L0_2_32_bits")
-print_graph(perturbations_4_64_bits_L0, "L0 for 4 bits", "L0 for 64 bits", "graphs/L0_2_64_bits")
+print_graph(perturbations_4_8_bits_L0, "L0 for 4 bits", "L0 for 8 bits", "graphs/L0_4_8_bits")
+print_graph(perturbations_4_16_bits_L0, "L0 for 4 bits", "L0 for 16 bits", "graphs/L0_4_16_bits")
+print_graph(perturbations_4_32_bits_L0, "L0 for 4 bits", "L0 for 32 bits", "graphs/L0_4_32_bits")
+print_graph(perturbations_4_64_bits_L0, "L0 for 4 bits", "L0 for 64 bits", "graphs/L0_4_64_bits")
 
 print_graph(perturbations_8_16_bits_L0, "L0 for 8 bits", "L0 for 16 bits", "graphs/L0_8_16_bits")
 print_graph(perturbations_8_32_bits_L0, "L0 for 8 bits", "L0 for 32 bits", "graphs/L0_8_32_bits")
@@ -211,9 +214,9 @@ print_graph(perturbations_2_32_bits_L2, "L2 for 2 bits", "L2 for 32 bits", "grap
 print_graph(perturbations_2_64_bits_L2, "L2 for 2 bits", "L2 for 64 bits", "graphs/L2_2_64_bits")
 
 print_graph(perturbations_4_8_bits_L2, "L2 for 4 bits", "L2 for 8 bits", "graphs/L2_2_8_bits")
-print_graph(perturbations_4_16_bits_L2, "L2 for 4 bits", "L2 for 16 bits", "graphs/L2_2_16_bits")
-print_graph(perturbations_4_32_bits_L2, "L2 for 4 bits", "L2 for 32 bits", "graphs/L2_2_32_bits")
-print_graph(perturbations_4_64_bits_L2, "L2 for 4 bits", "L2 for 64 bits", "graphs/L2_2_64_bits")
+print_graph(perturbations_4_16_bits_L2, "L2 for 4 bits", "L2 for 16 bits", "graphs/L2_4_16_bits")
+print_graph(perturbations_4_32_bits_L2, "L2 for 4 bits", "L2 for 32 bits", "graphs/L2_4_32_bits")
+print_graph(perturbations_4_64_bits_L2, "L2 for 4 bits", "L2 for 64 bits", "graphs/L2_4_64_bits")
 
 print_graph(perturbations_8_16_bits_L2, "L2 for 8 bits", "L2 for 16 bits", "graphs/L2_8_16_bits")
 print_graph(perturbations_8_32_bits_L2, "L2 for 8 bits", "L2 for 32 bits", "graphs/L2_8_32_bits")
