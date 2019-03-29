@@ -1,11 +1,7 @@
-#!/usr/bin/env python
-
-
 import numpy as np
 import math
 import time
 import os
-import copy
 
 
 def assure_path_exists(path):
@@ -49,7 +45,6 @@ def mergeTwoDicts(x, y):
             z[key] += y[key]
         else:
             z[key] = y[key]
-    # z.update(y)
     return z
 
 
