@@ -6,17 +6,16 @@ import numpy as np
 
 matplotlib.rcParams.update({'font.size': 15})
 
+numberImgs = {}
+# numberImgs["ship"]=[312,199,1223,1508,2725,5073,6181,7913,9018,9604]
+# numberImgs["airplane"]=[1898, 2461, 3426, 5173, 180, 8563, 4408, 1573, 8105, 7684]
 
-numberImgs={}
-#numberImgs["ship"]=[312,199,1223,1508,2725,5073,6181,7913,9018,9604]
-#numberImgs["airplane"]=[1898, 2461, 3426, 5173, 180, 8563, 4408, 1573, 8105, 7684]
+# numberImgs["dog"]=[239,1773,3000,7118,4917,9557,148,1548,640,1337]
+# numberImgs["cat"]=[2804,760,1123,950,3479,4404,3799,4032,4718,3700]
 
-#numberImgs["dog"]=[239,1773,3000,7118,4917,9557,148,1548,640,1337]
-#numberImgs["cat"]=[2804,760,1123,950,3479,4404,3799,4032,4718,3700]
+# numberImgs["truck"]=[3344,970,349,2700,3841,7955]
 
-#numberImgs["truck"]=[3344,970,349,2700,3841,7955]
-
-numberImgs["automobile"]=[1176, 1301, 987]
+numberImgs["automobile"] = [1176, 1301, 987]
 '''
 [6, 9, 37, 66, 81, 82, 104, 105, 
 114, 122, 131, 134, 161, 193, 201, 204, 231, 240, 241, 246, 
@@ -33,93 +32,90 @@ numberImgs["automobile"]=[1176, 1301, 987]
 1363, 1371, 1372, 1378, 1396, 1404, 1405, 1408, 1410, 1412, 
 1413, 1414, 1435, 1437, 1444, 1457, 1458, 1464, 1467]
 '''
-#numberImgs["deer"]=[7730,9205,4047,4112,4402,835,32,223,2805,1842]
-#numberImgs["horse"]=[216,934,1615,2145,2062,4092,4871,9102,9334,9850]
+# numberImgs["deer"]=[7730,9205,4047,4112,4402,835,32,223,2805,1842]
+# numberImgs["horse"]=[216,934,1615,2145,2062,4092,4871,9102,9334,9850]
 
-attackTarget={}
+attackTarget = {}
 
-#attackTarget["ship"]="airplane"
-#attackTarget["airplane"]="ship"
+# attackTarget["ship"]="airplane"
+# attackTarget["airplane"]="ship"
 
-#attackTarget["dog"]="cat"
-#attackTarget["cat"]="dog"
+# attackTarget["dog"]="cat"
+# attackTarget["cat"]="dog"
 
-#attackTarget["truck"]="automobile"
-attackTarget["automobile"]="truck"
+# attackTarget["truck"]="automobile"
+attackTarget["automobile"] = "truck"
 
-#attackTarget["deer"]="horse"
-#attackTarget["horse"]="deer"
+# attackTarget["deer"]="horse"
+# attackTarget["horse"]="deer"
 
-distance="L2"
-bits=[2,8,16,32,64]
-indexs = [x * 10 for x in range(0,len(bits))]
-print indexs
-imagesSeries={}
-pathFiles="/home/roki/GIT/QNNDeepGame/resultsCar2Truck16Agosto/"
+distance = "L2"
+bits = [2, 8, 16, 32, 64]
+indexs = [x * 10 for x in range(0, len(bits))]
+print(indexs)
+imagesSeries = {}
+pathFiles = "/home/roki/GIT/QNNDeepGame/resultsCar2Truck16Agosto/"
 
 plt.figure()
-j=0
+j = 0
 for label in numberImgs.keys():
-    #print label
-    imagesSeries={}
-    targetLabel=attackTarget[label]
-    for image in numberImgs[label]: 
-        imagesSeries[image]=[]
+    # print label
+    imagesSeries = {}
+    targetLabel = attackTarget[label]
+    for image in numberImgs[label]:
+        imagesSeries[image] = []
         for i in bits:
-            #print i
-            #print pathFiles+"cifar10"+str(image)+"Wbits"+str(i)+"Abits"+str(i)+".txt"
-            with open(pathFiles+"cifar10"+str(image)+"Wbits"+str(i)+"Abits"+str(i)+".txt") as f:
+            # print i
+            # print pathFiles+"cifar10"+str(image)+"Wbits"+str(i)+"Abits"+str(i)+".txt"
+            with open(pathFiles + "cifar10" + str(image) + "Wbits" + str(i) + "Abits" + str(i) + ".txt") as f:
                 content = f.readlines()
-            line0=content[0]
-            words0=line0.replace("'","").split()
-            predictionCorrect=words0.count(label)
-            line_1=content[-1]
-            words_1=line_1.replace("'","").split()
-            #print "prediction count:"+str(predictionCorrect)
-            if predictionCorrect==2:
+            line0 = content[0]
+            words0 = line0.replace("'", "").split()
+            predictionCorrect = words0.count(label)
+            line_1 = content[-1]
+            words_1 = line_1.replace("'", "").split()
+            # print "prediction count:"+str(predictionCorrect)
+            if predictionCorrect == 2:
                 if targetLabel in words_1:
-                    #it means prediction is ok
-                    #and target attack is satisfied
+                    # it means prediction is ok
+                    # and target attack is satisfied
                     for line in content:
                         if distance in line:
-                            val=float(line.split()[-1])
+                            val = float(line.split()[-1])
                             imagesSeries[image].append(val)
                 else:
                     imagesSeries[image].append(float('inf'))
-            else: 
+            else:
                 imagesSeries[image].append(float('nan'))
-        #print imagesSeries
-        #plt.figure()
-        #plt.xticks(range(1,len(bits)+1),bits)
+        # print imagesSeries
+        # plt.figure()
+        # plt.xticks(range(1,len(bits)+1),bits)
         color = cm.rainbow(np.linspace(0, 1, len(numberImgs["automobile"])))
-        #for key in imagesSeries:
-        key=image
+        # for key in imagesSeries:
+        key = image
 
-        plot=True
+        plot = True
         for val in imagesSeries[key]:
             if math.isnan(val) or math.isinf(val):
-                plot=False
+                plot = False
         if plot:
-            print "j:"+str(j)
-            print image
-            print imagesSeries[key]
+            print("j:" + str(j))
+            print(image)
+            print(imagesSeries[key])
             axes = plt.gca()
-            #axes.set_ylim([0,10])
-            tmp,=plt.plot(indexs, imagesSeries[key], '-o', color=color[j],label=key)
-            plt.title("From: "+label+" to:"+targetLabel)
-            plt.legend(loc=0, prop={'size': 15})            
+            # axes.set_ylim([0,10])
+            tmp, = plt.plot(indexs, imagesSeries[key], '-o', color=color[j], label=key)
+            plt.title("From: " + label + " to:" + targetLabel)
+            plt.legend(loc=0, prop={'size': 15})
             plt.xticks(indexs, bits)
-            #plt.annotate(str(image),xy=(1,imagesSeries[key][0]))
-            plt.annotate(str(image),xy=(64,imagesSeries[key][4]))
+            # plt.annotate(str(image),xy=(1,imagesSeries[key][0]))
+            plt.annotate(str(image), xy=(64, imagesSeries[key][4]))
             plt.xlabel('QUANTIZATION')
             plt.ylabel('L 2')
-            j=j+1
+            j = j + 1
             plt.show(block=False)
-            val=raw_input()
-            if val=="r":
+            val = raw_input()
+            if val == "r":
                 tmp.remove()
-print "DONE"
+print("DONE")
 plt.show()
-
-
-
