@@ -1,14 +1,11 @@
 import tensorflow as tf
-from keras.models import Sequential, Model
 from keras.backend.tensorflow_backend import set_session
 from models.model_factory import build_model_QNN
-from utils.config_utils import Config
 from utils.load_data import load_dataset
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard, LearningRateScheduler
-from keras.optimizers import SGD, Adam, Adadelta
+from keras.optimizers import Adam, Adadelta
 from keras.losses import squared_hinge
 import keras.backend as K
-import numpy
 import os
 
 
