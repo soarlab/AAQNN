@@ -1,8 +1,8 @@
 from __future__ import print_function
 import sys
 import multiprocessing
-from DataCollection import *
 from main import process_image
+import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
