@@ -16,6 +16,9 @@ In general, following bullets need to be solved:
 For more information: https://keras.io/getting-started/faq/#how-can-i-obtain-reproducible-results-using-keras-during-development
 ...
 '''
+SEED_NUMBER_1 = 1
+SEED_NUMBER_2 = 2
+SEED_NUMBER_3 = 3
 import os
 os.environ["PYTHONHASHSEED"] = "0"
 
@@ -26,12 +29,12 @@ import random as rn
 # The below is necessary for starting Numpy generated random numbers
 # in a well-defined initial state.
 
-np.random.seed(42)
+np.random.seed(SEED_NUMBER_1)
 
 # The below is necessary for starting core Python generated random numbers
 # in a well-defined state.
 
-rn.seed(12345)
+rn.seed(SEED_NUMBER_2)
 
 # Force TensorFlow to use single thread.
 # Multiple threads are a potential source of non-reproducible results.
@@ -47,7 +50,7 @@ from keras import backend as K
 # For further details, see:
 # https://www.tensorflow.org/api_docs/python/tf/set_random_seed
 
-tf.set_random_seed(1234)
+tf.set_random_seed(SEED_NUMBER_3)
 
 sess = tf.Session(graph=tf.get_default_graph(), config=session_conf)
 K.set_session(sess)
@@ -78,9 +81,9 @@ model_1.fit(train_images, train_labels, epochs=2)
 
 
 # reinitialize seeds to same values and train second model
-np.random.seed(42)
-rn.seed(12345)
-tf.set_random_seed(1234)
+np.random.seed(SEED_NUMBER_1)
+rn.seed(SEED_NUMBER_2)
+tf.set_random_seed(SEED_NUMBER_3)
 
 model_2 = keras.Sequential([
     keras.layers.Flatten(input_shape=(28, 28)),
