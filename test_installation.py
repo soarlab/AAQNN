@@ -14,39 +14,39 @@ finetune = True
 
 # GPU SETTINGS#
 def CudaMemorySettings():
-	config = tf.ConfigProto()
-	config.gpu_options.allow_growth = True
-	config.gpu_options.per_process_gpu_memory_fraction = 0.2
-	config.gpu_options.visible_device_list = "0"
-	set_session(tf.Session(config=config))
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth = True
+    config.gpu_options.per_process_gpu_memory_fraction = 0.2
+    config.gpu_options.visible_device_list = "0"
+    set_session(tf.Session(config=config))
 
 
 def CpuMemorySettings():
-	os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-	session_conf = tf.ConfigProto(
+    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+    session_conf = tf.ConfigProto(
 		device_count={'GPU': 0},
-		allow_soft_placement=True,
-		log_device_placement=False)
-	set_session(tf.Session(config=session_conf))
+        allow_soft_placement=True,
+        log_device_placement=False)
+    set_session(tf.Session(config=session_conf))
 
 
 dataSetName = "mnist"
 bound = "ub"
 gameType = "cooperative"
 image_index = 0
-distanceMeasure ="L2"
+distanceMeasure = "L2"
 distance = 10
 eta = (distanceMeasure, distance)
-tau=1
-wbits=2
-abits=2
-seed=10
+tau = 1
+wbits = 2
+abits = 2
+seed = 10
 
 # CudaMemorySettings()
 CpuMemorySettings()
 
 nameFile = "seed_" + str(seed) + "_" + str(dataSetName) + "_" + str(image_index) + "_Wbits" + str(
-	wbits) + "Abits" + str(abits) + ".txt"
+    wbits) + "Abits" + str(abits) + ".txt"
 
 print("name file: " + nameFile)
 
@@ -57,7 +57,6 @@ dc.initialiseIndex(image_index)
 print("ok")
 (elapsedTime, newConfident, percent, l2dist, l1dist, l0dist, maxFeatures) = (
     upperbound(dataSetName, bound, tau, gameType, image_index, eta, wbits, abits, nameFile, seed))
-
 
 dc.addRunningTime(elapsedTime)
 dc.addConfidence(newConfident)

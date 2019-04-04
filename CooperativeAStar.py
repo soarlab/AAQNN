@@ -40,32 +40,7 @@ class CooperativeAStar:
         print("Distance metric %s, with bound value %s." % (self.DIST_METRIC, self.DIST_VAL))
 
     def target_pixels(self, image, pixels):
-        # tau = self.TAU
-        # model = self.MODEL
         (row, col, chl) = image.shape
-
-        # img_batch = np.kron(np.ones((chl * 2, 1, 1, 1)), image)
-        # atomic_manipulations = {}
-        # manipulated_images = []
-        # idx = 0
-        # for (x, y) in pixels:
-        #     changed_img_batch = img_batch.copy()
-        #     for z in range(chl):
-        #         atomic = (x, y, z, 1 * tau)
-        #         changed_img_batch[z * 2] = self.atomic_manipulation(image, atomic)
-        #         # changed_img_batch[z * 2, x, y, z] += tau
-        #         atomic_manipulations.update({idx: atomic})
-        #         idx += 1
-        #         atomic = (x, y, z, -1 * tau)
-        #         changed_img_batch[z * 2 + 1] = self.atomic_manipulation(image, atomic)
-        #         # changed_img_batch[z * 2 + 1, x, y, z] -= tau
-        #         atomic_manipulations.update({idx: atomic})
-        #         idx += 1
-        #     manipulated_images.append(changed_img_batch)  # each loop append [chl*2, row, col, chl]
-        #
-        # manipulated_images = np.asarray(manipulated_images)  # [len(pixels), chl*2, row, col, chl]
-        # manipulated_images = manipulated_images.reshape(len(pixels) * chl * 2, row, col, chl)
-
         atomic_manipulations = []
         manipulated_images = []
         for (x, y) in pixels:
@@ -83,7 +58,6 @@ class CooperativeAStar:
         manipulated_images = np.asarray(manipulated_images)
 
         probabilities = self.MODEL.model.predict(manipulated_images)
-        # softmax_logits = self.MODEL.softmax_logits(manipulated_images)
 
         for idx in range(len(manipulated_images)):
             if not diffImage(manipulated_images[idx], self.IMAGE) or not diffImage(manipulated_images[idx], image):
@@ -161,42 +135,3 @@ class CooperativeAStar:
                 self.ADVERSARY_FOUND = True
                 self.ADVERSARY = new_image
                 break
-
-
-"""
-    def play_game(self, image):
-        self.player1(image)
-
-        self.ADV_MANIPULATION = min(self.DIST_EVALUATION, key=self.DIST_EVALUATION.get)
-        self.DIST_EVALUATION.pop(self.ADV_MANIPULATION)
-        print("Current best manipulations:", self.ADV_MANIPULATION)
-
-        new_image = copy.deepcopy(self.IMAGE)
-        atomic_list = [self.ADV_MANIPULATION[i:i + 4] for i in range(0, len(self.ADV_MANIPULATION), 4)]
-        for atomic in atomic_list:
-            valid, new_image = self.apply_atomic_manipulation(new_image, atomic)
-        print("%s distance: %s" % (self.DIST_METRIC, self.cal_distance(self.IMAGE, new_image)))
-
-        new_label, new_confidence = self.MODEL.predict(new_image)
-        if self.cal_distance(self.IMAGE, new_image) > self.DIST_VAL:
-            # print("Adversarial distance exceeds distance bound.")
-            self.ADVERSARY_FOUND = False
-        elif new_label != self.LABEL:
-            # print("Adversarial image is found.")
-            self.ADVERSARY_FOUND = True
-            self.ADVERSARY = new_image
-        else:
-            self.play_game(new_image)
-
-    def player1(self, image):
-        # print("Player I is acting on features.")
-
-        for partitionID in self.PARTITIONS.keys():
-            self.player2(image, partitionID)
-
-    def player2(self, image, partition_idx):
-        # print("Player II is acting on pixels in each partition.")
-
-        pixels = self.PARTITIONS[partition_idx]
-        self.target_pixels(image, pixels)
-"""

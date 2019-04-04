@@ -6,14 +6,7 @@ A data structure for organising search
 author: Xiaowei Huang
 """
 
-import numpy as np
-import time
-import os
-import copy
-import sys
 import operator
-import random
-import math
 
 from basics import *
 from GameMoves import *

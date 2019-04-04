@@ -5,9 +5,6 @@ author: Xiaowei Huang
 """
 
 import numpy as np
-import time
-import os
-import copy
 
 from basics import assure_path_exists
 

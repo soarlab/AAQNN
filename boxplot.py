@@ -1,8 +1,5 @@
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import cm
-import math
-import numpy as np
 
 matplotlib.rcParams.update({'font.size': 15})
 #seed_10_cifar10_2066_Wbits16Abits16.txt
@@ -10,7 +7,7 @@ matplotlib.rcParams.update({'font.size': 15})
 seed=10
 distance="L2"
 bits=[2,8,16,32,64]
-pathFiles="/home/roki/GIT/QNNDeepGame/results/"
+pathFiles="results/"
 dictBits={}
 for val in bits:
 	dictBits[val]=[]
@@ -24,9 +21,9 @@ for image in range(0,10000):
 			
 			splitPrediction=line0.split("'")
 			prediction=splitPrediction[1]
-			print prediction
+			print(prediction)
 			splitSpace=line0.replace("'","").split()
-			print splitSpace
+			print(splitSpace)
 			predictionCorrect=splitSpace.count(prediction)
 			
 			if predictionCorrect==2:
