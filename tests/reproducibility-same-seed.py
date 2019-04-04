@@ -16,15 +16,20 @@ In general, following bullets need to be solved:
 For more information: https://keras.io/getting-started/faq/#how-can-i-obtain-reproducible-results-using-keras-during-development
 ...
 '''
-SEED_NUMBER_1 = 1
-SEED_NUMBER_2 = 2
-SEED_NUMBER_3 = 3
-import os
-os.environ["PYTHONHASHSEED"] = "0"
 
+import os
 import numpy as np
 import tensorflow as tf
 import random as rn
+import keras
+from keras import backend as K
+
+SEED_NUMBER_1 = 1
+SEED_NUMBER_2 = 2
+SEED_NUMBER_3 = 3
+
+os.environ["PYTHONHASHSEED"] = "0"
+
 
 # The below is necessary for starting Numpy generated random numbers
 # in a well-defined initial state.
@@ -42,8 +47,6 @@ rn.seed(SEED_NUMBER_2)
 
 session_conf = tf.ConfigProto(intra_op_parallelism_threads=1,
                               inter_op_parallelism_threads=1)
-import keras
-from keras import backend as K
 
 # The below tf.set_random_seed() will make random number generation
 # in the TensorFlow backend have a well-defined initial state.

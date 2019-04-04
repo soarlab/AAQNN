@@ -6,7 +6,7 @@ THEN they should have similar accuracy
 For seed manipulation, check "reproducibility-same-seed.py" test
 '''
 
-# 1% percent difference allowed in accuracy
+# 1% difference allowed in accuracy
 SIMILARITY_VALUE = 0.01
 
 SEED_NUMBER_1 = 1
