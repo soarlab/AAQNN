@@ -15,6 +15,7 @@ import tensorflow as tf
 import random as rn
 from cleverhans.attacks import FastGradientMethod
 from cleverhans.utils_keras import KerasModelWrapper
+import matplotlib.pyplot as plt
 
 
 np.random.seed(SEED_NUMBER_1)
@@ -72,3 +73,33 @@ adv_2 = fgsm.generate_np(img, **fgsm_params)
 
 print(model.predict(adv_1))
 assert np.array_equal(adv_1, adv_2)
+
+# plot original, adversarial for 1st NN, adversarial for 2nd NN, absolute difference
+plt.figure(figsize=(1, 4))
+diff = abs(adv_1[0] - adv_2[0])
+
+plt.subplot(1, 4, 1)
+plt.xticks([])
+plt.yticks([])
+plt.grid(False)
+plt.imshow(img[0], cmap='gray')
+
+plt.subplot(1, 4, 2)
+plt.xticks([])
+plt.yticks([])
+plt.grid(False)
+plt.imshow(adv_1[0], cmap='gray')
+
+plt.subplot(1, 4, 3)
+plt.xticks([])
+plt.yticks([])
+plt.grid(False)
+plt.imshow(adv_2[0], cmap='gray')
+
+plt.subplot(1, 4, 4)
+plt.xticks([])
+plt.yticks([])
+plt.grid(False)
+plt.imshow(diff, cmap='gray')
+
+plt.show()
