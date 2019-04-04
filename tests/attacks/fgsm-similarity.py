@@ -9,15 +9,16 @@ import keras
 from keras import backend as K
 from cleverhans.attacks import FastGradientMethod
 from cleverhans.utils_keras import KerasModelWrapper
+import matplotlib.pyplot as plt
 
-# 3% difference allowed in accuracy (e.g. 83% and 79% accuracies are ok)
-ACCURACY_SIMILARITY = 0.03
+# 5% difference allowed in accuracy (e.g. 83% and 79% accuracies are ok)
+ACCURACY_SIMILARITY = 0.05
 
-# 1% in perturbation difference allowed 
-PERTURBATION_SIMILARITY = 0.01
+# 3% in perturbation difference allowed
+PERTURBATION_SIMILARITY = 0.03
 
 # fixed hyperparameters
-FGSM_PARAMS = {'eps': 0.1,
+FGSM_PARAMS = {'eps': 0.05,
                'clip_min': 0.,
                'clip_max': 1.,
                }
@@ -111,3 +112,36 @@ print("mean 2: " + str(mean_2))
 print("std 2: " + str(std_2))
 print("min 2: " + str(min_2))
 print("max 2: " + str(max_2))
+
+# plot original, adversarial for 1st NN, adversarial for 2nd NN, absolute difference
+plt.figure(figsize=(10, 4))
+for i in range(10):
+    test_image = test_images[i]
+    adv_image_1 = adv_1[i]
+    adv_image_2 = adv_2[i]
+    diff = abs(adv_image_1 - adv_image_2)
+
+    plt.subplot(10, 4, i*4 + 1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(test_image, cmap='gray')
+
+    plt.subplot(10, 4, i*4 + 2)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(adv_image_1, cmap='gray')
+
+    plt.subplot(10, 4, i*4 + 3)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(adv_image_2, cmap='gray')
+
+    plt.subplot(10, 4, i*4 + 4)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(diff, cmap='gray')
+plt.show()
