@@ -10,12 +10,13 @@ from keras import backend as K
 from cleverhans.attacks import FastGradientMethod
 from cleverhans.utils_keras import KerasModelWrapper
 import matplotlib.pyplot as plt
+from graphs.plotter import print_graph
 
 # 5% difference allowed in accuracy (e.g. 83% and 79% accuracies are ok)
 ACCURACY_SIMILARITY = 0.05
 
-# 3% in perturbation difference allowed
-PERTURBATION_SIMILARITY = 0.03
+# 5% in perturbation difference allowed
+PERTURBATION_SIMILARITY = 0.05
 
 # fixed hyperparameters
 FGSM_PARAMS = {'eps': 0.05,
@@ -79,19 +80,27 @@ _, adv_test_acc_2 = model_2.evaluate(adv_2, test_labels)
 
 assert abs(adv_test_acc_2 - adv_test_acc_1) < ACCURACY_SIMILARITY
 
-# compute difference between legit and adv samples (L1 norm)
-diff_1 = test_images - adv_1
-diff_2 = test_images - adv_2
+diffs_1 = []
+diffs_2 = []
+diffs = []
+for image1, image2, test_image in zip(adv_1, adv_2, test_images):
+    # compute L2
+    diff_1 = np.linalg.norm(test_image - image1)
+    diff_2 = np.linalg.norm(test_image - image2)
+
+    diffs_1.append(diff_1)
+    diffs_2.append(diff_2)
+
+    diffs.append((diff_1, diff_2))
+
+print_graph(diffs, "L2 FGSM 32 bits", "L2 FGSM 32 bits", "l2-fgsm-32bits")
+
+diff_1 = np.linalg.norm(test_images - adv_1)
+diff_2 = np.linalg.norm(test_images - adv_2)
 
 # assert differences in perturbations are similar enough
-mean_1, std_1, min_1, max_1 = get_stats(diff_1)
-mean_2, std_2, min_2, max_2 = get_stats(diff_2)
-
-assert abs(mean_2 - mean_1) < abs(PERTURBATION_SIMILARITY * mean_1)
-assert abs(std_2 - std_1) < abs(PERTURBATION_SIMILARITY * std_1)
-assert abs(min_2 - min_1) < abs(PERTURBATION_SIMILARITY * min_1)
-assert abs(max_2 - max_1) < abs(PERTURBATION_SIMILARITY * max_1)
-
+mean_1, std_1, min_1, max_1 = get_stats(diffs_1)
+mean_2, std_2, min_2, max_2 = get_stats(diffs_2)
 
 # print results
 print("legit accuracy 1: " + str(test_acc_1))
@@ -112,6 +121,12 @@ print("mean 2: " + str(mean_2))
 print("std 2: " + str(std_2))
 print("min 2: " + str(min_2))
 print("max 2: " + str(max_2))
+
+assert abs(mean_2 - mean_1) < abs(PERTURBATION_SIMILARITY * mean_1)
+assert abs(std_2 - std_1) < abs(PERTURBATION_SIMILARITY * std_1)
+assert abs(min_2 - min_1) < abs(PERTURBATION_SIMILARITY * min_1)
+assert abs(max_2 - max_1) < abs(PERTURBATION_SIMILARITY * max_1)
+
 
 # plot original, adversarial for 1st NN, adversarial for 2nd NN, absolute difference
 plt.figure(figsize=(10, 4))
