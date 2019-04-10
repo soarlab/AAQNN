@@ -90,7 +90,7 @@ for image1, image2, test_image in zip(adv_1, adv_2, test_images):
 
     diffs.append((diff_1, diff_2))
 
-print_graph(diffs, "L2 FGSM 32 bits", "L2 FGSM 32 bits", "l2-fgsm-32bits")
+print_graph(diffs, "L2 CW 32 bits", "L2 CW 32 bits", "l2-cw-32bits")
 
 diff_1 = np.linalg.norm(test_images - adv_1)
 diff_2 = np.linalg.norm(test_images - adv_2)
