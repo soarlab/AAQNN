@@ -12,15 +12,15 @@ from cleverhans.utils_keras import KerasModelWrapper
 import matplotlib.pyplot as plt
 from graphs.plotter import print_graph
 
-# 5% difference allowed in accuracy (e.g. 83% and 79% accuracies are ok)
-ACCURACY_SIMILARITY = 0.15
+# 10% difference allowed in accuracy (e.g. 83% and 79% accuracies are ok)
+ACCURACY_SIMILARITY = 0.10
 
-# 5% in perturbation difference allowed
-PERTURBATION_SIMILARITY = 0.15
+# 10% in perturbation difference allowed
+PERTURBATION_SIMILARITY = 0.10
 
 # fixed hyperparameters
 CW_PARAMS = {'initial_const': 0.1}
-EPOCHS_NUMBER = 2
+EPOCHS_NUMBER = 10
 
 
 def get_new_instance_of_trained_NN(train_images, train_labels):
