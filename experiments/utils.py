@@ -33,29 +33,56 @@ def get_QNN(q: int):
     return None
 
 
-def _get_positive_samples(images, labels, model):
+def _get_positive_samples(images, labels, model, same_label):
     '''
-    Return images and associated labels that are correctly classified by given model.
+    :param images: samples to classify
+    :param labels: ground truth labels
+    :param model: model that performs classification
+    :param same_label: If true, return correctly classified images. If false, return not correctly classified images
     '''
     positive_images = []
     positive_labels = []
     for image, label in zip(images, labels):
         image = (np.expand_dims(image, 0))
         predicted_label = np.argmax(model.predict(image))
-        if predicted_label == label:
-            positive_images.append(image[0, :, :])
-            positive_labels.append(label)
+        if same_label:
+            # those that are correctly classified
+            if predicted_label == label:
+                positive_images.append(image[0, :, :])
+                positive_labels.append(label)
+        else:
+            # those that are not correctly classified
+            if predicted_label != label:
+                positive_images.append(image[0, :, :])
+                positive_labels.append(label)
 
     np_images = np.array(positive_images)
     np_labels = np.array(positive_labels)
     return np_images, np_labels
 
 
-def filter_positive_samples(images, labels, models):
+def _filter_samples(images: np.ndarray, labels: np.ndarray, models: list, correctly_classified: bool):
+    if len(models) == 1:
+        return _get_positive_samples(images, labels, models[0], correctly_classified)
+
+    positive_images, positive_labels = _get_positive_samples(images, labels, models[0], correctly_classified)
+
+    return _filter_samples(positive_images, positive_labels, models[1:], correctly_classified)
+
+
+def filter_correctly_classified_samples(images: np.ndarray, labels: np.ndarray, models: list):
     '''
     Return images and associated labels that are correctly classified by all models.
     :param models: list of models
     '''
-    # there is no support for >1 model at the moment
-    assert len(models) == 1
-    return _get_positive_samples(images, labels, models[0])
+    assert len(models) > 0, "List of models must not be empty"
+    return _filter_samples(images, labels, models, True)
+
+
+def filter_not_correctly_classifed_samples(images: np.ndarray, labels: np.ndarray, models: list):
+    '''
+    Return images and associated labels that are not correctly classified by all models.
+    :param models: list of models
+    '''
+    assert len(models) > 0, "List of models must not be empty"
+    return _filter_samples(images, labels, models, False)
