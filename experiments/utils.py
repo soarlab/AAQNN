@@ -4,7 +4,8 @@ Functions that are used by some experiments in this package.
 import keras
 import tensorflow as tf
 import numpy as np
-
+from layers.quantized_layers import QuantizedDense
+from layers.quantized_ops import quantized_relu
 
 def get_scaled_fashion_mnist():
     fashion_mnist = keras.datasets.fashion_mnist
@@ -17,7 +18,7 @@ def get_scaled_fashion_mnist():
     return (train_images, train_labels), (test_images, test_labels)
 
 
-def get_vanilla_CNN():
+def get_vanilla_NN():
     model = keras.Sequential([
         keras.layers.Flatten(input_shape=(28, 28)),
         keras.layers.Dense(128, activation=tf.nn.relu),
@@ -30,7 +31,20 @@ def get_vanilla_CNN():
 
 
 def get_QNN(q: int):
-    return None
+    '''
+    Model has same architecture as model returned from `get_vanilla_CNN`.
+    :param q: number of bits for activation functions and weights
+    '''
+    model = keras.Sequential([
+        keras.layers.Flatten(input_shape=(28, 28)),
+        QuantizedDense(units=128, nb=q, activation=quantized_relu),
+        QuantizedDense(units=10, nb=q, activation=tf.nn.softmax)
+    ])
+
+    model.compile(optimizer='adam',
+                  loss='sparse_categorical_crossentropy',
+                  metrics=['accuracy'])
+    return model
 
 
 def _get_positive_samples(images, labels, model, same_label):
