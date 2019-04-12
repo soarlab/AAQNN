@@ -10,7 +10,7 @@ import tensorflow as tf
 from cleverhans.attacks import FastGradientMethod
 from cleverhans.utils_keras import KerasModelWrapper
 from keras import backend as K
-from experiments import utils
+from experiments.utils import get_vanilla_NN, get_scaled_fashion_mnist, filter_correctly_classified_samples, filter_not_correctly_classifed_samples
 
 EPOCHS = 1
 FGSM_PARAMS = {'eps': 0.05,
@@ -23,11 +23,11 @@ sess = tf.Session(graph=tf.get_default_graph())
 K.set_session(sess)
 
 # get dataset
-(train_images, train_labels), (test_images, test_labels) = utils.get_scaled_fashion_mnist()
+(train_images, train_labels), (test_images, test_labels) = get_scaled_fashion_mnist()
 
 # load models
-model_1 = utils.get_vanilla_CNN()
-model_2 = utils.get_vanilla_CNN()
+model_1 = get_vanilla_NN()
+model_2 = get_vanilla_NN()
 
 # train models
 model_1.fit(train_images, train_labels, epochs=EPOCHS)
@@ -40,7 +40,7 @@ print("Test accuracy NN_1: " + str(test_acc_1))
 print("Test accuracy NN_2: " + str(test_acc_2))
 
 # filter samples correctly classified by both models
-test_images, test_labels = utils.filter_correctly_classified_samples(test_images, test_labels, [model_1, model_2])
+test_images, test_labels = filter_correctly_classified_samples(test_images, test_labels, [model_1, model_2])
 print("From now on using " + str(test_images.shape[0]) + " samples that are correctly classified by both networks.")
 
 # assert samples are 100% correctly predicted
@@ -64,7 +64,7 @@ print("Accuracy of NN_1 on adversarial samples crafted for NN_1: " + str(adv_tes
 print("Accuracy of NN_2 on adversarial samples crafted for NN_1: " + str(adv_test_acc_2))
 
 # filter successful misclassifications on first model
-successful_adv_1, correct_labels = utils.filter_not_correctly_classifed_samples(adv, test_labels, [model_1])
+successful_adv_1, correct_labels = filter_not_correctly_classifed_samples(adv, test_labels, [model_1])
 
 # assert correctness of filter
 _, zero_acc = model_1.evaluate(successful_adv_1, correct_labels)
@@ -73,7 +73,7 @@ assert zero_acc == 0.0
 print("Number of samples misclassified by NN_1: ", successful_adv_1.shape[0])
 
 # check how many successful misclassifications from NN 1 transfers to NN 2
-successful_adv_2, _ = utils.filter_not_correctly_classifed_samples(successful_adv_1, correct_labels, [model_2])
+successful_adv_2, _ = filter_not_correctly_classifed_samples(successful_adv_1, correct_labels, [model_2])
 
 print("Out of those " + str(successful_adv_1.shape[0]) + " samples, " + str(successful_adv_2.shape[0]) + " are misclassified by NN_2 as well.")
 
