@@ -14,20 +14,11 @@ First step is to have a map which saves id of a sample and list of successful at
 Second step would be to visualize this. TODO: How to visualize?
 '''
 
-'''
-This expeirment is structured as follows:
-1. Train 2 NNs with same architecture (32bits CNN and 32 bit QNN)
-2. Load samples that are correctly classified by both NNs (accuracies are 100% on these samples)
-3. Craft adversarial samples for first NN out of samples from step 2.
-4. Evaluate first and second NN on the samples from step 3.
-'''
-
-
 import tensorflow as tf
 from cleverhans.attacks import FastGradientMethod
 from cleverhans.utils_keras import KerasModelWrapper
 from keras import backend as K
-from experiments.utils import get_vanilla_NN, get_scaled_fashion_mnist, filter_correctly_classified_samples, filter_not_correctly_classifed_samples, get_QNN
+from experiments.utils import get_vanilla_NN, get_scaled_fashion_mnist, filter_correctly_classified_samples, get_QNN
 
 EPOCHS = 1
 FGSM_PARAMS = {'eps': 0.05,
