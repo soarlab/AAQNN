@@ -12,7 +12,7 @@ from cleverhans.utils_keras import KerasModelWrapper
 from keras import backend as K
 from experiments.utils import get_vanilla_NN, get_scaled_fashion_mnist, filter_correctly_classified_samples, filter_not_correctly_classifed_samples
 
-EPOCHS = 1
+EPOCHS = 5
 FGSM_PARAMS = {'eps': 0.05,
                'clip_min': 0.,
                'clip_max': 1.,
@@ -30,12 +30,12 @@ model_1 = get_vanilla_NN()
 model_2 = get_vanilla_NN()
 
 # train models
-model_1.fit(train_images, train_labels, epochs=EPOCHS)
-model_2.fit(train_images, train_labels, epochs=EPOCHS)
+model_1.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_2.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
 
 # evaluate models on the test set
-_, test_acc_1 = model_1.evaluate(test_images, test_labels)
-_, test_acc_2 = model_2.evaluate(test_images, test_labels)
+_, test_acc_1 = model_1.evaluate(test_images, test_labels, verbose=0)
+_, test_acc_2 = model_2.evaluate(test_images, test_labels, verbose=0)
 print("Test accuracy NN_1: " + str(test_acc_1))
 print("Test accuracy NN_2: " + str(test_acc_2))
 
@@ -44,8 +44,8 @@ test_images, test_labels = filter_correctly_classified_samples(test_images, test
 print("From now on using " + str(test_images.shape[0]) + " samples that are correctly classified by both networks.")
 
 # assert samples are 100% correctly predicted
-_, test_acc_1 = model_1.evaluate(test_images, test_labels)
-_, test_acc_2 = model_2.evaluate(test_images, test_labels)
+_, test_acc_1 = model_1.evaluate(test_images, test_labels, verbose=0)
+_, test_acc_2 = model_2.evaluate(test_images, test_labels, verbose=0)
 
 assert test_acc_1 == test_acc_2 == 1.0
 print("Both networks have accuracy now 1.0")
@@ -56,8 +56,8 @@ fgsm_1 = FastGradientMethod(wrap_1, sess)
 adv = fgsm_1.generate_np(test_images, **FGSM_PARAMS)
 
 # evaluate same adversarial samples on both neural networks
-_, adv_test_acc_1 = model_1.evaluate(adv, test_labels)
-_, adv_test_acc_2 = model_2.evaluate(adv, test_labels)
+_, adv_test_acc_1 = model_1.evaluate(adv, test_labels, verbose=0)
+_, adv_test_acc_2 = model_2.evaluate(adv, test_labels, verbose=0)
 
 # print results
 print("Accuracy of NN_1 on adversarial samples crafted for NN_1: " + str(adv_test_acc_1))
@@ -67,7 +67,7 @@ print("Accuracy of NN_2 on adversarial samples crafted for NN_1: " + str(adv_tes
 successful_adv_1, correct_labels = filter_not_correctly_classifed_samples(adv, test_labels, [model_1])
 
 # assert correctness of filter
-_, zero_acc = model_1.evaluate(successful_adv_1, correct_labels)
+_, zero_acc = model_1.evaluate(successful_adv_1, correct_labels, verbose=0)
 assert zero_acc == 0.0
 
 print("Number of samples misclassified by NN_1: ", successful_adv_1.shape[0])

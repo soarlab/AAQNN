@@ -1,17 +1,11 @@
 '''
-This is expansion of 'FullNNto32bitQNN.py' experiment.
+This is an extension of 'FullNNto32bitQNN.py' experiment.
 
 This expeirment is structured as follows:
-1. Train 6 NNs with same architectures (32bits CNN, 2,4,8,16,32 bit QNN)
+1. Train 6 NNs with same architectures (32bits NN, 2,4,8,16,32 bit QNN)
 2. Load samples that are correctly classified by all NNs (accuracies are 100% on these samples)
-3. Craft adversarial samples for 32 bits CNN out of samples from step 2.
-4. Evaluate all networks on samples from step 3.
-
-Except for steps above, see how does the same sample behaves across different quantization levels.
-Want to see if there is number of bits after which a sample is not adversarial anymore.
-
-First step is to have a map which saves id of a sample and list of successful attacks per quantization levels.
-Second step would be to visualize this. TODO: How to visualize?
+3. Craft adversarial samples for 32 bits NN out of samples from step 2.
+4. Evaluate all networks on adversarial samples from step 3.
 '''
 
 import tensorflow as tf
@@ -20,7 +14,7 @@ from cleverhans.utils_keras import KerasModelWrapper
 from keras import backend as K
 from experiments.utils import get_vanilla_NN, get_scaled_fashion_mnist, filter_correctly_classified_samples, get_QNN
 
-EPOCHS = 1
+EPOCHS = 10
 FGSM_PARAMS = {'eps': 0.05,
                'clip_min': 0.,
                'clip_max': 1.,
@@ -42,30 +36,30 @@ model_16bits = get_QNN(16)
 model_32bits = get_QNN(32)
 
 # train models
-model_not_quantized.fit(train_images, train_labels, epochs=EPOCHS)
-model_2bits.fit(train_images, train_labels, epochs=EPOCHS)
-model_4bits.fit(train_images, train_labels, epochs=EPOCHS)
-model_8bits.fit(train_images, train_labels, epochs=EPOCHS)
-model_16bits.fit(train_images, train_labels, epochs=EPOCHS)
-model_32bits.fit(train_images, train_labels, epochs=EPOCHS)
+model_not_quantized.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_2bits.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_4bits.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_8bits.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_16bits.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_32bits.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
 
 # evaluate models on the test set
-_, test_acc = model_not_quantized.evaluate(test_images, test_labels)
+_, test_acc = model_not_quantized.evaluate(test_images, test_labels, verbose=0)
 print("Test accuracy not quantized NN: " + str(test_acc))
 
-_, test_acc = model_2bits.evaluate(test_images, test_labels)
+_, test_acc = model_2bits.evaluate(test_images, test_labels, verbose=0)
 print("Test accuracy of NN with 2 bits: " + str(test_acc))
 
-_, test_acc = model_4bits.evaluate(test_images, test_labels)
+_, test_acc = model_4bits.evaluate(test_images, test_labels, verbose=0)
 print("Test accuracy of NN with 4 bits: " + str(test_acc))
 
-_, test_acc = model_8bits.evaluate(test_images, test_labels)
+_, test_acc = model_8bits.evaluate(test_images, test_labels, verbose=0)
 print("Test accuracy of NN with 8 bits: " + str(test_acc))
 
-_, test_acc = model_16bits.evaluate(test_images, test_labels)
+_, test_acc = model_16bits.evaluate(test_images, test_labels, verbose=0)
 print("Test accuracy of NN with 16 bits: " + str(test_acc))
 
-_, test_acc = model_32bits.evaluate(test_images, test_labels)
+_, test_acc = model_32bits.evaluate(test_images, test_labels, verbose=0)
 print("Test accuracy of NN with 32 bits: " + str(test_acc))
 
 
@@ -84,20 +78,20 @@ print("Finished generating adversarial samples")
 
 # evaluate models on adv samples
 print("Evaluating accuracy of all neural networks on adversarial samples crafted for not quantized neural network..")
-_, test_acc = model_not_quantized.evaluate(adv, test_labels)
+_, test_acc = model_not_quantized.evaluate(adv, test_labels, verbose=0)
 print("Accuracy of not quantized NN: " + str(test_acc))
 
-_, test_acc = model_2bits.evaluate(adv, test_labels)
+_, test_acc = model_2bits.evaluate(adv, test_labels, verbose=0)
 print("Accuracy of NN with 2 bits: " + str(test_acc))
 
-_, test_acc = model_4bits.evaluate(adv, test_labels)
+_, test_acc = model_4bits.evaluate(adv, test_labels, verbose=0)
 print("Accuracy of NN with 4 bits: " + str(test_acc))
 
-_, test_acc = model_8bits.evaluate(adv, test_labels)
+_, test_acc = model_8bits.evaluate(adv, test_labels, verbose=0)
 print("Accuracy of NN with 8 bits: " + str(test_acc))
 
-_, test_acc = model_16bits.evaluate(adv, test_labels)
+_, test_acc = model_16bits.evaluate(adv, test_labels, verbose=0)
 print("Accuracy of NN with 16 bits: " + str(test_acc))
 
-_, test_acc = model_32bits.evaluate(adv, test_labels)
+_, test_acc = model_32bits.evaluate(adv, test_labels, verbose=0)
 print("Accuracy of NN with 32 bits: " + str(test_acc))
