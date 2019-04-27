@@ -2,7 +2,7 @@
 This experiment is structured as follows:
 1. Train QNNs for all quantization levels
 2. Load samples that are correctly classified by all the QNNs from step 1 (accuracies are 100% on these samples)
-3. Run the iterative FGSM attack for different Q levels
+3. Run the CW attack for different Q levels
 4. Evaluate the QNNs on new adversarial samples
 '''
 
