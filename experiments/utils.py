@@ -100,3 +100,6 @@ def filter_not_correctly_classifed_samples(images: np.ndarray, labels: np.ndarra
     '''
     assert len(models) > 0, "List of models must not be empty"
     return _filter_samples(images, labels, models, False)
+
+def get_stats(values):
+    return np.mean(values), np.std(values), np.min(values), np.max(values)
