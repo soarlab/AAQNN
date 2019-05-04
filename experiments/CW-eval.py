@@ -10,13 +10,15 @@ import tensorflow as tf
 from cleverhans.attacks import CarliniWagnerL2
 from cleverhans.utils_keras import KerasModelWrapper
 from keras import backend as K
-from experiments.utils import get_scaled_fashion_mnist, filter_correctly_classified_samples, get_QNN, get_vanilla_NN
+from experiments.utils import get_fashion_mnist, filter_correctly_classified_samples, get_QNN, get_vanilla_NN
 import matplotlib.pyplot as plt
 import numpy as np
 from experiments.utils import get_stats
 
 EPOCHS = 10
 EPS = 0.06
+NUMBER_OF_SAMPLES = 100
+
 CW_PARAMS = {'clip_min': 0.,
              'clip_max': 1.,
              'binary_search_steps': 9,  # number of times to adjust the constant with binary search
@@ -31,7 +33,7 @@ sess = tf.Session(graph=tf.get_default_graph())
 K.set_session(sess)
 
 # get dataset
-(train_images, train_labels), (test_images, test_labels) = get_scaled_fashion_mnist()
+(train_images, train_labels), (test_images, test_labels) = get_fashion_mnist()
 
 # load models
 model_2bits = get_QNN(2)
@@ -73,7 +75,9 @@ print("Test accuracy of vanilla NN (with 32 bits): " + str(test_acc))
 # filter samples correctly classified by both models
 all_models = [model_2bits, model_4bits, model_8bits, model_16bits, model_32bits, model_vanilla_nn]
 test_images, test_labels = filter_correctly_classified_samples(test_images, test_labels, all_models)
-print("From now on using " + str(test_images.shape[0]) + " samples that are correctly classified by all networks.")
+test_images = test_images[:NUMBER_OF_SAMPLES]
+test_labels = test_labels[:NUMBER_OF_SAMPLES]
+print("From now on using " + str(test_images.shape[0]) + " samples, all of them are correctly classified by all networks.")
 print("All neural networks now have 100% accuracy.")
 
 # perform attack on 2 bits QNN
