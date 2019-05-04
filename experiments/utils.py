@@ -7,14 +7,16 @@ import numpy as np
 from layers.quantized_layers import QuantizedDense
 from layers.quantized_ops import quantized_relu
 
-def get_scaled_fashion_mnist():
+
+def get_fashion_mnist(scaled=True):
     fashion_mnist = keras.datasets.fashion_mnist
 
     (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
 
-    train_images = train_images / 255.0
+    if scaled:
+        train_images = train_images / 255.0
+        test_images = test_images / 255.0
 
-    test_images = test_images / 255.0
     return (train_images, train_labels), (test_images, test_labels)
 
 
@@ -100,6 +102,7 @@ def filter_not_correctly_classifed_samples(images: np.ndarray, labels: np.ndarra
     '''
     assert len(models) > 0, "List of models must not be empty"
     return _filter_samples(images, labels, models, False)
+
 
 def get_stats(values):
     return np.mean(values), np.std(values), np.min(values), np.max(values)
