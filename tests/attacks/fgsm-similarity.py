@@ -11,6 +11,7 @@ from cleverhans.attacks import FastGradientMethod
 from cleverhans.utils_keras import KerasModelWrapper
 import matplotlib.pyplot as plt
 from graphs.plotter import print_graph
+from experiments.utils import get_stats
 
 # 5% difference allowed in accuracy (e.g. 83% and 79% accuracies are ok)
 ACCURACY_SIMILARITY = 0.05
@@ -40,10 +41,6 @@ def get_new_instance_of_trained_NN(train_images, train_labels):
 
     model.fit(train_images, train_labels, epochs=EPOCHS_NUMBER)
     return model
-
-
-def get_stats(values):
-    return np.mean(values), np.std(values), np.min(values), np.max(values)
 
 
 # initialize keras/tf session
