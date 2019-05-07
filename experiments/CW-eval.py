@@ -15,9 +15,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from experiments.utils import get_stats
 
-EPOCHS = 10
-EPS = 0.06
-NUMBER_OF_SAMPLES = 100
+EPOCHS = 1
+NUMBER_OF_SAMPLES = 1000
 
 CW_PARAMS = {'clip_min': 0.,
              'clip_max': 1.,
@@ -36,55 +35,87 @@ K.set_session(sess)
 (train_images, train_labels), (test_images, test_labels) = get_fashion_mnist()
 
 # load models
-model_2bits = get_QNN(2)
-model_4bits = get_QNN(4)
-model_8bits = get_QNN(8)
-model_16bits = get_QNN(16)
-model_32bits = get_QNN(32)
-model_vanilla_nn = get_vanilla_NN()
+model_2bits_1 = get_QNN(2)
+model_4bits_1 = get_QNN(4)
+model_8bits_1 = get_QNN(8)
+model_16bits_1 = get_QNN(16)
+model_32bits_1 = get_QNN(32)
+model_vanilla_nn_1 = get_vanilla_NN()
+
+model_2bits_2 = get_QNN(2)
+model_4bits_2 = get_QNN(4)
+model_8bits_2 = get_QNN(8)
+model_16bits_2 = get_QNN(16)
+model_32bits_2 = get_QNN(32)
+model_vanilla_nn_2 = get_vanilla_NN()
 
 # train models
 print("Training models...")
-model_2bits.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
-model_4bits.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
-model_8bits.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
-model_16bits.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
-model_32bits.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
-model_vanilla_nn.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_2bits_1.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_4bits_1.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_8bits_1.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_16bits_1.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_32bits_1.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_vanilla_nn_1.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+
+model_2bits_2.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_4bits_2.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_8bits_2.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_16bits_2.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_32bits_2.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+model_vanilla_nn_2.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
 print("Training finished.")
 
 # evaluate models on the test set
-_, test_acc = model_2bits.evaluate(test_images, test_labels, verbose=0)
-print("Test accuracy of QNN with 2 bits: " + str(test_acc))
+_, test_acc = model_2bits_1.evaluate(test_images, test_labels, verbose=0)
+print("Test accuracy of QNN_1 with 2 bits: " + str(test_acc))
+_, test_acc = model_2bits_2.evaluate(test_images, test_labels, verbose=0)
+print("Test accuracy of QNN_2 with 2 bits: " + str(test_acc))
 
-_, test_acc = model_4bits.evaluate(test_images, test_labels, verbose=0)
-print("Test accuracy of QNN with 4 bits: " + str(test_acc))
+_, test_acc = model_4bits_1.evaluate(test_images, test_labels, verbose=0)
+print("Test accuracy of QNN_1 with 4 bits: " + str(test_acc))
+_, test_acc = model_4bits_2.evaluate(test_images, test_labels, verbose=0)
+print("Test accuracy of QNN_2 with 4 bits: " + str(test_acc))
 
-_, test_acc = model_8bits.evaluate(test_images, test_labels, verbose=0)
-print("Test accuracy of QNN with 8 bits: " + str(test_acc))
+_, test_acc = model_8bits_1.evaluate(test_images, test_labels, verbose=0)
+print("Test accuracy of QNN_1 with 8 bits: " + str(test_acc))
+_, test_acc = model_8bits_2.evaluate(test_images, test_labels, verbose=0)
+print("Test accuracy of QNN_2 with 8 bits: " + str(test_acc))
 
-_, test_acc = model_16bits.evaluate(test_images, test_labels, verbose=0)
-print("Test accuracy of QNN with 16 bits: " + str(test_acc))
+_, test_acc = model_16bits_1.evaluate(test_images, test_labels, verbose=0)
+print("Test accuracy of QNN_1 with 16 bits: " + str(test_acc))
+_, test_acc = model_16bits_2.evaluate(test_images, test_labels, verbose=0)
+print("Test accuracy of QNN_2 with 16 bits: " + str(test_acc))
 
-_, test_acc = model_32bits.evaluate(test_images, test_labels, verbose=0)
-print("Test accuracy of QNN with 32 bits: " + str(test_acc))
+_, test_acc = model_32bits_1.evaluate(test_images, test_labels, verbose=0)
+print("Test accuracy of QNN_1 with 32 bits: " + str(test_acc))
+_, test_acc = model_32bits_2.evaluate(test_images, test_labels, verbose=0)
+print("Test accuracy of QNN_2 with 32 bits: " + str(test_acc))
 
-_, test_acc = model_vanilla_nn.evaluate(test_images, test_labels, verbose=0)
-print("Test accuracy of vanilla NN (with 32 bits): " + str(test_acc))
+_, test_acc = model_vanilla_nn_1.evaluate(test_images, test_labels, verbose=0)
+print("Test accuracy of vanilla NN_1 (with 32 bits): " + str(test_acc))
+_, test_acc = model_vanilla_nn_2.evaluate(test_images, test_labels, verbose=0)
+print("Test accuracy of vanilla NN_2 (with 32 bits): " + str(test_acc))
 
-# filter samples correctly classified by both models
-all_models = [model_2bits, model_4bits, model_8bits, model_16bits, model_32bits, model_vanilla_nn]
+
+#filter samples correctly classified by all models
+all_models = [model_2bits_1, model_2bits_2,
+              model_4bits_1, model_4bits_2,
+              model_8bits_1, model_8bits_2,
+              model_16bits_1, model_16bits_2,
+              model_32bits_1, model_32bits_2,
+              model_vanilla_nn_1, model_vanilla_nn_2]
+
 test_images, test_labels = filter_correctly_classified_samples(test_images, test_labels, all_models)
-test_images = test_images[:NUMBER_OF_SAMPLES]
-test_labels = test_labels[:NUMBER_OF_SAMPLES]
-print("From now on using " + str(test_images.shape[0]) + " samples, all of them are correctly classified by all networks.")
+print("From now on using " + str(test_images.shape[0]) + " samples that are correctly classified by all " + str(len(all_models)) + " networks.")
 print("All neural networks now have 100% accuracy.")
+print()
 
 # perform attack on 2 bits QNN
-print("Generating adversarial samples for QNN with 2 bits..")
-wrap = KerasModelWrapper(model_2bits)
-cw_attack = CarliniWagnerL2(wrap, sess)
-adv = cw_attack.generate_np(test_images, **CW_PARAMS)
+print("Generating adversarial samples for QNN_1 with 2 bits..")
+wrap = KerasModelWrapper(model_2bits_1)
+cw = CarliniWagnerL2(wrap, sess)
+adv = cw.generate_np(test_images, **CW_PARAMS)
 print("Finished generating adversarial samples")
 
 # quantify perturbation
@@ -96,33 +127,45 @@ print("min: " + str(min))
 print("max: " + str(max))
 
 # evaluate models on adv samples
-print("Evaluating accuracy of all neural networks on adversarial samples crafted for 2 bits QNN..")
+print("Evaluating accuracy of all neural networks on adversarial samples crafted for 2 bits QNN_1..")
 
-_, test_acc = model_2bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 2 bits: " + str(test_acc))
+_, test_acc = model_2bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 2 bits: " + str(test_acc))
+_, test_acc = model_2bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 2 bits: " + str(test_acc))
 
-_, test_acc = model_4bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 4 bits: " + str(test_acc))
+_, test_acc = model_4bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 4 bits: " + str(test_acc))
+_, test_acc = model_4bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 4 bits: " + str(test_acc))
 
-_, test_acc = model_8bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 8 bits: " + str(test_acc))
+_, test_acc = model_8bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 8 bits: " + str(test_acc))
+_, test_acc = model_8bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 8 bits: " + str(test_acc))
 
-_, test_acc = model_16bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 16 bits: " + str(test_acc))
+_, test_acc = model_16bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 16 bits: " + str(test_acc))
+_, test_acc = model_16bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 16 bits: " + str(test_acc))
 
-_, test_acc = model_32bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 32 bits: " + str(test_acc))
+_, test_acc = model_32bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 32 bits: " + str(test_acc))
+_, test_acc = model_32bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 32 bits: " + str(test_acc))
 
-_, test_acc = model_vanilla_nn.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of vanilla NN (with 32 bits): " + str(test_acc))
+_, test_acc = model_vanilla_nn_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of vanilla NN_1 (with 32 bits): " + str(test_acc))
+_, test_acc = model_vanilla_nn_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of vanilla NN_2 (with 32 bits): " + str(test_acc))
 
 print()
 
 # perform attack on 4 bits QNN
-print("Generating adversarial samples for QNN with 4 bits..")
-wrap = KerasModelWrapper(model_4bits)
-cw_attack = CarliniWagnerL2(wrap, sess)
-adv = cw_attack.generate_np(test_images, **CW_PARAMS)
+print("Generating adversarial samples for QNN_1 with 4 bits..")
+wrap = KerasModelWrapper(model_4bits_1)
+cw = CarliniWagnerL2(wrap, sess)
+adv = cw.generate_np(test_images, **CW_PARAMS)
 print("Finished generating adversarial samples")
 
 # quantify perturbation
@@ -134,33 +177,45 @@ print("min: " + str(min))
 print("max: " + str(max))
 
 # evaluate models on adv samples
-print("Evaluating accuracy of all neural networks on adversarial samples crafted for 4 bits QNN..")
+print("Evaluating accuracy of all neural networks on adversarial samples crafted for 4 bits QNN_1..")
 
-_, test_acc = model_2bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 2 bits: " + str(test_acc))
+_, test_acc = model_2bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 2 bits: " + str(test_acc))
+_, test_acc = model_2bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 2 bits: " + str(test_acc))
 
-_, test_acc = model_4bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 4 bits: " + str(test_acc))
+_, test_acc = model_4bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 4 bits: " + str(test_acc))
+_, test_acc = model_4bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 4 bits: " + str(test_acc))
 
-_, test_acc = model_8bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 8 bits: " + str(test_acc))
+_, test_acc = model_8bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 8 bits: " + str(test_acc))
+_, test_acc = model_8bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 8 bits: " + str(test_acc))
 
-_, test_acc = model_16bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 16 bits: " + str(test_acc))
+_, test_acc = model_16bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 16 bits: " + str(test_acc))
+_, test_acc = model_16bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 16 bits: " + str(test_acc))
 
-_, test_acc = model_32bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 32 bits: " + str(test_acc))
+_, test_acc = model_32bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 32 bits: " + str(test_acc))
+_, test_acc = model_32bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 32 bits: " + str(test_acc))
 
-_, test_acc = model_vanilla_nn.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of vanilla NN (with 32 bits): " + str(test_acc))
+_, test_acc = model_vanilla_nn_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of vanilla NN_1 (with 32 bits): " + str(test_acc))
+_, test_acc = model_vanilla_nn_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of vanilla NN_2 (with 32 bits): " + str(test_acc))
 
 print()
 
 # perform attack on 8 bits QNN
-print("Generating adversarial samples for QNN with 8 bits..")
-wrap = KerasModelWrapper(model_8bits)
-cw_attack = CarliniWagnerL2(wrap, sess)
-adv = cw_attack.generate_np(test_images, **CW_PARAMS)
+print("Generating adversarial samples for QNN_1 with 8 bits..")
+wrap = KerasModelWrapper(model_8bits_1)
+cw = CarliniWagnerL2(wrap, sess)
+adv = cw.generate_np(test_images, **CW_PARAMS)
 print("Finished generating adversarial samples")
 
 # quantify perturbation
@@ -172,33 +227,45 @@ print("min: " + str(min))
 print("max: " + str(max))
 
 # evaluate models on adv samples
-print("Evaluating accuracy of all neural networks on adversarial samples crafted for 8 bits QNN..")
+print("Evaluating accuracy of all neural networks on adversarial samples crafted for 8 bits QNN_1..")
 
-_, test_acc = model_2bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 2 bits: " + str(test_acc))
+_, test_acc = model_2bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 2 bits: " + str(test_acc))
+_, test_acc = model_2bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 2 bits: " + str(test_acc))
 
-_, test_acc = model_4bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 4 bits: " + str(test_acc))
+_, test_acc = model_4bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 4 bits: " + str(test_acc))
+_, test_acc = model_4bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 4 bits: " + str(test_acc))
 
-_, test_acc = model_8bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 8 bits: " + str(test_acc))
+_, test_acc = model_8bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 8 bits: " + str(test_acc))
+_, test_acc = model_8bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 8 bits: " + str(test_acc))
 
-_, test_acc = model_16bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 16 bits: " + str(test_acc))
+_, test_acc = model_16bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 16 bits: " + str(test_acc))
+_, test_acc = model_16bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 16 bits: " + str(test_acc))
 
-_, test_acc = model_32bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 32 bits: " + str(test_acc))
+_, test_acc = model_32bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 32 bits: " + str(test_acc))
+_, test_acc = model_32bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 32 bits: " + str(test_acc))
 
-_, test_acc = model_vanilla_nn.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of vanilla NN (with 32 bits): " + str(test_acc))
+_, test_acc = model_vanilla_nn_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of vanilla NN_1 (with 32 bits): " + str(test_acc))
+_, test_acc = model_vanilla_nn_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of vanilla NN_2 (with 32 bits): " + str(test_acc))
 
 print()
 
 # perform attack on 16 bits QNN
-print("Generating adversarial samples for QNN with 16 bits..")
-wrap = KerasModelWrapper(model_16bits)
-cw_attack = CarliniWagnerL2(wrap, sess)
-adv = cw_attack.generate_np(test_images, **CW_PARAMS)
+print("Generating adversarial samples for QNN_1 with 16 bits..")
+wrap = KerasModelWrapper(model_16bits_1)
+cw = CarliniWagnerL2(wrap, sess)
+adv = cw.generate_np(test_images, **CW_PARAMS)
 print("Finished generating adversarial samples")
 
 # quantify perturbation
@@ -210,33 +277,46 @@ print("min: " + str(min))
 print("max: " + str(max))
 
 # evaluate models on adv samples
-print("Evaluating accuracy of all neural networks on adversarial samples crafted for 16 bits QNN..")
+print("Evaluating accuracy of all neural networks on adversarial samples crafted for 16 bits QNN_1..")
 
-_, test_acc = model_2bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 2 bits: " + str(test_acc))
+_, test_acc = model_2bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 2 bits: " + str(test_acc))
+_, test_acc = model_2bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 2 bits: " + str(test_acc))
 
-_, test_acc = model_4bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 4 bits: " + str(test_acc))
+_, test_acc = model_4bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 4 bits: " + str(test_acc))
+_, test_acc = model_4bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 4 bits: " + str(test_acc))
 
-_, test_acc = model_8bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 8 bits: " + str(test_acc))
+_, test_acc = model_8bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 8 bits: " + str(test_acc))
+_, test_acc = model_8bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 8 bits: " + str(test_acc))
 
-_, test_acc = model_16bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 16 bits: " + str(test_acc))
+_, test_acc = model_16bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 16 bits: " + str(test_acc))
+_, test_acc = model_16bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 16 bits: " + str(test_acc))
 
-_, test_acc = model_32bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 32 bits: " + str(test_acc))
+_, test_acc = model_32bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 32 bits: " + str(test_acc))
+_, test_acc = model_32bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 32 bits: " + str(test_acc))
 
-_, test_acc = model_vanilla_nn.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of vanilla NN (with 32 bits): " + str(test_acc))
+_, test_acc = model_vanilla_nn_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of vanilla NN_1 (with 32 bits): " + str(test_acc))
+_, test_acc = model_vanilla_nn_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of vanilla NN_2 (with 32 bits): " + str(test_acc))
 
 print()
 
+
 # perform attack on 32 bits QNN
 print("Generating adversarial samples for QNN with 32 bits..")
-wrap = KerasModelWrapper(model_32bits)
-cw_attack = CarliniWagnerL2(wrap, sess)
-adv = cw_attack.generate_np(test_images, **CW_PARAMS)
+wrap = KerasModelWrapper(model_32bits_1)
+cw = CarliniWagnerL2(wrap, sess)
+adv = cw.generate_np(test_images, **CW_PARAMS)
 print("Finished generating adversarial samples")
 
 # quantify perturbation
@@ -248,33 +328,45 @@ print("min: " + str(min))
 print("max: " + str(max))
 
 # evaluate models on adv samples
-print("Evaluating accuracy of all neural networks on adversarial samples crafted for 32 bits QNN..")
+print("Evaluating accuracy of all neural networks on adversarial samples crafted for 32 bits QNN_1..")
 
-_, test_acc = model_2bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 2 bits: " + str(test_acc))
+_, test_acc = model_2bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 2 bits: " + str(test_acc))
+_, test_acc = model_2bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 2 bits: " + str(test_acc))
 
-_, test_acc = model_4bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 4 bits: " + str(test_acc))
+_, test_acc = model_4bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 4 bits: " + str(test_acc))
+_, test_acc = model_4bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 4 bits: " + str(test_acc))
 
-_, test_acc = model_8bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 8 bits: " + str(test_acc))
+_, test_acc = model_8bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 8 bits: " + str(test_acc))
+_, test_acc = model_8bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 8 bits: " + str(test_acc))
 
-_, test_acc = model_16bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 16 bits: " + str(test_acc))
+_, test_acc = model_16bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 16 bits: " + str(test_acc))
+_, test_acc = model_16bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 16 bits: " + str(test_acc))
 
-_, test_acc = model_32bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 32 bits: " + str(test_acc))
+_, test_acc = model_32bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 32 bits: " + str(test_acc))
+_, test_acc = model_32bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 32 bits: " + str(test_acc))
 
-_, test_acc = model_vanilla_nn.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of vanilla NN (with 32 bits): " + str(test_acc))
+_, test_acc = model_vanilla_nn_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of vanilla NN_1 (with 32 bits): " + str(test_acc))
+_, test_acc = model_vanilla_nn_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of vanilla NN_2 (with 32 bits): " + str(test_acc))
 
 print()
 
 # perform attack on (32 bits) vanilla NN
-print("Generating adversarial samples for vanilla NN (with 32 bits)..")
-wrap = KerasModelWrapper(model_vanilla_nn)
-cw_attack = CarliniWagnerL2(wrap, sess)
-adv = cw_attack.generate_np(test_images, **CW_PARAMS)
+print("Generating adversarial samples for vanilla NN_1 (with 32 bits)..")
+wrap = KerasModelWrapper(model_vanilla_nn_1)
+cw = CarliniWagnerL2(wrap, sess)
+adv = cw.generate_np(test_images, **CW_PARAMS)
 print("Finished generating adversarial samples")
 
 # quantify perturbation
@@ -286,25 +378,37 @@ print("min: " + str(min))
 print("max: " + str(max))
 
 # evaluate models on adv samples
-print("Evaluating accuracy of all neural networks on adversarial samples crafted for 32 bits QNN..")
+print("Evaluating accuracy of all neural networks on adversarial samples crafted for vanilla NN_1 (32 bits)..")
 
-_, test_acc = model_2bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 2 bits: " + str(test_acc))
+_, test_acc = model_2bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 2 bits: " + str(test_acc))
+_, test_acc = model_2bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 2 bits: " + str(test_acc))
 
-_, test_acc = model_4bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 4 bits: " + str(test_acc))
+_, test_acc = model_4bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 4 bits: " + str(test_acc))
+_, test_acc = model_4bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 4 bits: " + str(test_acc))
 
-_, test_acc = model_8bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 8 bits: " + str(test_acc))
+_, test_acc = model_8bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 8 bits: " + str(test_acc))
+_, test_acc = model_8bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 8 bits: " + str(test_acc))
 
-_, test_acc = model_16bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 16 bits: " + str(test_acc))
+_, test_acc = model_16bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 16 bits: " + str(test_acc))
+_, test_acc = model_16bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 16 bits: " + str(test_acc))
 
-_, test_acc = model_32bits.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of QNN with 32 bits: " + str(test_acc))
+_, test_acc = model_32bits_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_1 with 32 bits: " + str(test_acc))
+_, test_acc = model_32bits_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of QNN_2 with 32 bits: " + str(test_acc))
 
-_, test_acc = model_vanilla_nn.evaluate(adv, test_labels, verbose=0)
-print("Accuracy of vanilla NN (with 32 bits): " + str(test_acc))
+_, test_acc = model_vanilla_nn_1.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of vanilla NN_1 (with 32 bits): " + str(test_acc))
+_, test_acc = model_vanilla_nn_2.evaluate(adv, test_labels, verbose=0)
+print("Accuracy of vanilla NN_2 (with 32 bits): " + str(test_acc))
 
 print()
 
@@ -316,4 +420,4 @@ for i in range(1, 26):
     plt.yticks([])
     plt.grid(False)
     plt.imshow(adv[i], cmap='gray')
-plt.savefig("CW-vanilla-NN-adv" + str(EPS) + ".png")
+plt.savefig("CW-vanilla-NN-adv.png")
