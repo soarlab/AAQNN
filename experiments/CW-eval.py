@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from experiments.utils import get_stats
 
-EPOCHS = 1
+EPOCHS = 10
 NUMBER_OF_SAMPLES = 1000
 
 CW_PARAMS = {'clip_min': 0.,
@@ -33,6 +33,7 @@ K.set_session(sess)
 
 # get dataset
 (train_images, train_labels), (test_images, test_labels) = get_fashion_mnist()
+#(train_images, train_labels), (test_images, test_labels) = get_mnist()
 
 # load models
 model_2bits_1 = get_QNN(2)

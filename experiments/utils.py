@@ -20,6 +20,19 @@ def get_fashion_mnist(scaled=True):
     return (train_images, train_labels), (test_images, test_labels)
 
 
+def get_mnist(scaled=True):
+    mnist = keras.datasets.mnist
+
+    (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+
+    if scaled:
+        train_images = train_images / 255.0
+        test_images = test_images / 255.0
+
+    return (train_images, train_labels), (test_images, test_labels)
+
+
+
 def get_vanilla_NN():
     model = keras.Sequential([
         keras.layers.Flatten(input_shape=(28, 28)),
