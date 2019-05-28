@@ -36,9 +36,10 @@ def get_mnist(scaled=True):
 def get_vanilla_NN():
     model = keras.Sequential([
         keras.layers.Flatten(input_shape=(28, 28)),
-        keras.layers.Dense(128, activation=tf.nn.relu),
-        keras.layers.Dense(10, activation=tf.nn.softmax)
+        keras.layers.Dense(units=128, activation=tf.nn.relu),
+        keras.layers.Dense(units=10, activation=tf.nn.softmax)
     ])
+
     model.compile(optimizer='adam',
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])

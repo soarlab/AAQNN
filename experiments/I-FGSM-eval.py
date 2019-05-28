@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from experiments.utils import get_stats
 
-EPOCHS = 10
+EPOCHS = 2
 EPS = 0.06
 FGSM_PARAMS = {'clip_min': 0.,
                'clip_max': 1.,
@@ -51,12 +51,78 @@ model_vanilla_nn_2 = get_vanilla_NN()
 
 # train models
 print("Training models...")
+model_vanilla_nn_1.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
 model_2bits_1.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
 model_4bits_1.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
 model_8bits_1.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
 model_16bits_1.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
 model_32bits_1.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
-model_vanilla_nn_1.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
+
+# plot weights distribution
+print ("Vanilla weights")
+min_value = None
+max_value = None
+weights_vanilla = []
+for layer in model_vanilla_nn_1.get_weights():
+    for neuron in layer:
+        if isinstance(neuron, np.float32):
+            # bias
+            weights_vanilla.append(neuron)
+            continue
+        for weight in neuron:
+            weights_vanilla.append(weight)
+            if min_value is None or weight < min_value:
+                min_value = weight
+            if max_value is None or weight > max_value:
+                max_value = weight
+
+ids = [x for x in range(0, len(weights_vanilla))]
+plt.scatter(ids, weights_vanilla,  marker=',', s=0.52)
+axes = plt.gca()
+axes.set_ylim([-1.1,1.1])
+plt.title("Vanilla NN")
+plt.xlabel('Weight "ids"', fontsize=18)
+plt.ylabel('Weight value', fontsize=16)
+plt.show()
+
+mean, std, min, max = get_stats(np.array(weights_vanilla))
+print("mean: " + str(mean))
+print("std dev: " + str(std))
+print("min: " + str(min))
+print("max: " + str(max))
+
+
+print ("QNN weights")
+min_value = None
+max_value = None
+weights_qnn = []
+for layer in model_8bits_1.get_weights():
+    for neuron in layer:
+        if isinstance(neuron, np.float32):
+            # bias
+            weights_qnn.append(neuron)
+            continue
+        for weight in neuron:
+            weights_qnn.append(weight)
+            if min_value is None or weight < min_value:
+                min_value = weight
+            if max_value is None or weight > max_value:
+                max_value = weight
+
+plt.scatter(ids, weights_qnn, marker=',', s=0.52)
+axes = plt.gca()
+axes.set_ylim([-1.1,1.1])
+plt.title("QNN")
+plt.xlabel('Weight "ids"', fontsize=18)
+plt.ylabel('Weight value', fontsize=16)
+plt.show()
+
+mean, std, min, max = get_stats(np.array(weights_qnn))
+print("mean: " + str(mean))
+print("std dev: " + str(std))
+print("min: " + str(min))
+print("max: " + str(max))
+
 
 model_2bits_2.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
 model_4bits_2.fit(train_images, train_labels, epochs=EPOCHS, verbose=0)
