@@ -32,17 +32,17 @@ def get_mnist(scaled=True):
     return (train_images, train_labels), (test_images, test_labels)
 
 
-
-def get_vanilla_NN():
+def get_vanilla_NN(compile=True):
     model = keras.Sequential([
         keras.layers.Flatten(input_shape=(28, 28)),
         keras.layers.Dense(units=128, activation=tf.nn.relu),
         keras.layers.Dense(units=10, activation=tf.nn.softmax)
     ])
 
-    model.compile(optimizer='adam',
-                  loss='sparse_categorical_crossentropy',
-                  metrics=['accuracy'])
+    if compile:
+        model.compile(optimizer='adam',
+                      loss='sparse_categorical_crossentropy',
+                      metrics=['accuracy'])
     return model
 
 
