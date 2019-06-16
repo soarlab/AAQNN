@@ -10,10 +10,24 @@ Code base is built on top of https://colab.research.google.com/gist/ohtaman/c1cf
 
 
 import tensorflow as tf
-from tensorflow import keras
-from experiments.utils import get_fashion_mnist
+import keras
+from cleverhans.attacks import ProjectedGradientDescent
+from cleverhans.utils_keras import KerasModelWrapper
+from experiments.utils import get_fashion_mnist, filter_correctly_classified_samples, get_stats
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 print(tf.__version__)
+
+EPS = 0.06
+FGSM_PARAMS = {'clip_min': 0.,
+               'clip_max': 1.,
+               'eps': EPS,
+               # as in the original paper
+               'nb_iter': int(min(EPS * 255 + 4, 1.25 * EPS * 255)),
+               'rand_init': 0.
+               }
 
 # get dataset
 (train_images, train_labels), (test_images, test_labels) = get_fashion_mnist()
@@ -26,7 +40,7 @@ def build_keras_model():
         keras.layers.Dense(units=10, activation=tf.nn.softmax)
     ])
 
-# train
+# train 4 bits
 train_graph = tf.Graph()
 train_sess = tf.Session(graph=train_graph)
 
@@ -35,7 +49,9 @@ with train_graph.as_default():
     train_model = build_keras_model()
 
     # quantization aware training
-    tf.contrib.quantize.create_training_graph(input_graph=train_graph)
+    #tf.contrib.quantize.create_training_graph(input_graph=train_graph)
+    tf.contrib.quantize.experimental_create_training_graph(input_graph=train_graph, weight_bits=4, activation_bits=4)
+
     train_sess.run(tf.global_variables_initializer())
 
     train_model.compile(
@@ -43,36 +59,130 @@ with train_graph.as_default():
         loss='sparse_categorical_crossentropy',
         metrics=['accuracy']
     )
-    train_model.fit(train_images, train_labels, epochs=1)
+    train_model.fit(train_images, train_labels, epochs=2)
 
-    # save graph and checkpoints
-    saver = tf.train.Saver()
-    saver.save(train_sess, './checkpoints')
+    tf.contrib.quantize.experimental_create_eval_graph(input_graph=train_graph, weight_bits=4, activation_bits=4)
 
-    print('sample result of original model')
-    print(train_model.predict(test_images[:1]))
-    print('ground truth value: ')
-    print(test_labels[:1])
+    _, test_acc = train_model.evaluate(test_images, test_labels, verbose=0)
+    print("Test accuracy of QNN: " + str(test_acc))
 
-# eval
-eval_graph = tf.Graph()
-eval_sess = tf.Session(graph=eval_graph)
+    # perform attack on the QNN
+    print("Generating adversarial samples for QNN..")
+    wrap = KerasModelWrapper(train_model)
+    iterative_fgsm = ProjectedGradientDescent(wrap, train_sess)
+    adv_4_bits = iterative_fgsm.generate_np(test_images, **FGSM_PARAMS)
+    print("Finished generating adversarial samples")
 
-keras.backend.set_session(eval_sess)
+    # quantify perturbation
+    mean, std, min, max = get_stats(np.array([np.linalg.norm(x - y) for x, y in zip(test_images, adv_4_bits)]))
+    print("Information about L2 distances between adversarial and original samples:")
+    print("mean: " + str(mean))
+    print("std dev: " + str(std))
+    print("min: " + str(min))
+    print("max: " + str(max))
 
-with eval_graph.as_default():
-    keras.backend.set_learning_phase(0)
-    eval_model = build_keras_model()
-    tf.contrib.quantize.create_eval_graph(input_graph=eval_graph)
-    eval_graph_def = eval_graph.as_graph_def()
-    saver = tf.train.Saver()
-    saver.restore(eval_sess, 'checkpoints')
+    # evaluate adv samples
+    _, test_acc = train_model.evaluate(adv_4_bits, test_labels, verbose=0)
+    print("Test accuracy of QNN on adversarial samples: " + str(test_acc))
 
-    frozen_graph_def = tf.graph_util.convert_variables_to_constants(
-        eval_sess,
-        eval_graph_def,
-        [eval_model.output.op.name]
+# train 8 bits
+train_graph = tf.Graph()
+train_sess = tf.Session(graph=train_graph)
+
+keras.backend.set_session(train_sess)
+with train_graph.as_default():
+    train_model = build_keras_model()
+
+    # quantization aware training
+    #tf.contrib.quantize.create_training_graph(input_graph=train_graph)
+    tf.contrib.quantize.experimental_create_training_graph(input_graph=train_graph, weight_bits=8, activation_bits=8)
+
+    train_sess.run(tf.global_variables_initializer())
+
+    train_model.compile(
+        optimizer='adam',
+        loss='sparse_categorical_crossentropy',
+        metrics=['accuracy']
     )
+    train_model.fit(train_images, train_labels, epochs=2)
 
-    with open('frozen_model.pb', 'wb') as f:
-        f.write(frozen_graph_def.SerializeToString())
+    tf.contrib.quantize.experimental_create_eval_graph(input_graph=train_graph, weight_bits=8, activation_bits=8)
+
+    _, test_acc = train_model.evaluate(test_images, test_labels, verbose=0)
+    print("Test accuracy of QNN: " + str(test_acc))
+
+    # perform attack on the QNN
+    print("Generating adversarial samples for QNN..")
+    wrap = KerasModelWrapper(train_model)
+    iterative_fgsm = ProjectedGradientDescent(wrap, train_sess)
+    adv_8_bits = iterative_fgsm.generate_np(test_images, **FGSM_PARAMS)
+    print("Finished generating adversarial samples")
+
+    # quantify perturbation
+    mean, std, min, max = get_stats(np.array([np.linalg.norm(x - y) for x, y in zip(test_images, adv_8_bits)]))
+    print("Information about L2 distances between adversarial and original samples:")
+    print("mean: " + str(mean))
+    print("std dev: " + str(std))
+    print("min: " + str(min))
+    print("max: " + str(max))
+
+    # evaluate adv samples
+    _, test_acc = train_model.evaluate(adv_4_bits, test_labels, verbose=0)
+    print("Test accuracy of QNN on adversarial samples (4 bits): " + str(test_acc))
+
+    # evaluate adv samples
+    _, test_acc = train_model.evaluate(adv_8_bits, test_labels, verbose=0)
+    print("Test accuracy of QNN on adversarial samples (8 bits): " + str(test_acc))
+
+# train 16 bits
+train_graph = tf.Graph()
+train_sess = tf.Session(graph=train_graph)
+
+keras.backend.set_session(train_sess)
+with train_graph.as_default():
+    train_model = build_keras_model()
+
+    # quantization aware training
+    #tf.contrib.quantize.create_training_graph(input_graph=train_graph)
+    tf.contrib.quantize.experimental_create_training_graph(input_graph=train_graph, weight_bits=16, activation_bits=16)
+
+    train_sess.run(tf.global_variables_initializer())
+
+    train_model.compile(
+        optimizer='adam',
+        loss='sparse_categorical_crossentropy',
+        metrics=['accuracy']
+    )
+    train_model.fit(train_images, train_labels, epochs=2)
+
+    tf.contrib.quantize.experimental_create_eval_graph(input_graph=train_graph, weight_bits=16, activation_bits=16)
+
+    _, test_acc = train_model.evaluate(test_images, test_labels, verbose=0)
+    print("Test accuracy of QNN: " + str(test_acc))
+
+    # perform attack on the QNN
+    print("Generating adversarial samples for QNN..")
+    wrap = KerasModelWrapper(train_model)
+    iterative_fgsm = ProjectedGradientDescent(wrap, train_sess)
+    adv_16_bits = iterative_fgsm.generate_np(test_images, **FGSM_PARAMS)
+    print("Finished generating adversarial samples")
+
+    # quantify perturbation
+    mean, std, min, max = get_stats(np.array([np.linalg.norm(x - y) for x, y in zip(test_images, adv_8_bits)]))
+    print("Information about L2 distances between adversarial and original samples:")
+    print("mean: " + str(mean))
+    print("std dev: " + str(std))
+    print("min: " + str(min))
+    print("max: " + str(max))
+
+    # evaluate adv samples
+    _, test_acc = train_model.evaluate(adv_4_bits, test_labels, verbose=0)
+    print("Test accuracy of QNN on adversarial samples (4 bits): " + str(test_acc))
+
+    # evaluate adv samples
+    _, test_acc = train_model.evaluate(adv_8_bits, test_labels, verbose=0)
+    print("Test accuracy of QNN on adversarial samples (8 bits): " + str(test_acc))
+
+    # evaluate adv samples
+    _, test_acc = train_model.evaluate(adv_16_bits, test_labels, verbose=0)
+    print("Test accuracy of QNN on adversarial samples (16 bits): " + str(test_acc))
